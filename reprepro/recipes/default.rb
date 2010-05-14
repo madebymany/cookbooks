@@ -30,7 +30,7 @@ apt_repo = data_bag_item("reprepro", "main")
 
 ruby_block "save node data" do
   block do
-    node.save
+    # node.save
   end
   action :create
 end
