@@ -33,7 +33,7 @@ search(:apps) do |app|
       user_pw = app["mysql_#{user}_password"]
       if !user_pw.nil? and user_pw[node.app_environment]
         node.set[:mysql]["server_#{user}_password"] = user_pw[node.app_environment]
-        node.save
+        # node.save
       else
         log "A password for MySQL user #{user} was not found in DataBag 'apps' item '#{app["id"]}' for environment ' for #{node.app_environment}'." do
           level :warn

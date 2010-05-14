@@ -87,7 +87,7 @@ end
 
 ruby_block "save node data" do
   block do
-    node.save
+    # node.save
   end
   action :create
 end
