@@ -102,7 +102,15 @@ log-queries-not-using-indexes
 # The following can be used as easy to replay backup logs or for replication.
 # note: if you are setting up a replication slave, see README.Debian about
 #       other settings you may need to change.
-#server-id              = 1
+server-id                = <%= @node[:mysql][:server_id] %>
+auto_increment_increment = <%= @node[:mysql][:auto_increment_increment] %>
+auto_increment_offset    = <%= @node[:mysql][:auto_increment_offset] %>
+<% if @node[:mysql][:master_host] %>
+master-host     = <%= @node[:mysql][:master_host] %>
+master-user     = repl
+master-password = <%= @node[:mysql][:server_repl_password] %>
+<% end %>
+
 #log_bin                        = /var/log/mysql/mysql-bin.log
 expire_logs_days        = 10
 max_binlog_size         = 100M

@@ -40,3 +40,8 @@ set_unless[:mysql][:tunable][:net_write_timeout]   = "30"
 set_unless[:mysql][:tunable][:back_log]            = "128"
 set_unless[:mysql][:tunable][:table_cache]         = "128"
 set_unless[:mysql][:tunable][:max_heap_table_size] = "32M"
+
+# Replication
+set_unless[:mysql][:server_id]                = 1
+set_unless[:mysql][:auto_increment_increment] = 1
+set_unless[:mysql][:auto_increment_offset]    = 1
