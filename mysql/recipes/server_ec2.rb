@@ -29,6 +29,11 @@ if (node[:ec2] && ! FileTest.directory?(node[:mysql][:ec2_path]))
     not_if do FileTest.directory?(node[:mysql][:ec2_path]) end
   end
 
+  directory node[:mysql][:datadir] do
+    owner "mysql"
+    group "mysql"
+  end
+
   directory node[:mysql][:ec2_path] do
     owner "mysql"
     group "mysql"
