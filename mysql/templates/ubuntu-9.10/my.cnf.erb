@@ -109,6 +109,14 @@ auto_increment_offset    = <%= @node[:mysql][:auto_increment_offset] %>
 master-host     = <%= @node[:mysql][:master_host] %>
 master-user     = repl
 master-password = <%= @node[:mysql][:server_repl_password] %>
+
+log-bin       = /var/lib/mysql/master-bin.log
+log-bin-index = /var/lib/mysql/master-log-bin.index
+log-error     = /var/lib/mysql/master-error.log
+
+relay-log           = /var/lib/mysql/slave-relay.log
+relay-log-info-file = /var/lib/mysql/slave-relay-log.info
+relay-log-index     = /var/lib/mysql/slave-relay-log.index
 <% end %>
 
 #log_bin                        = /var/log/mysql/mysql-bin.log
