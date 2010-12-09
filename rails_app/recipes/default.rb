@@ -79,5 +79,6 @@ bash "enable_site" do
 end
 
 bash "reload_apache" do
+  code "/etc/init.d/apache2 start"
   code "/etc/init.d/apache2 reload"
 end
