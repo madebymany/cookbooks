@@ -1,7 +1,7 @@
-package "apache2"
-package "apache2::mod_headers"
-package "apache2::mod_rewrite"
-package "passenger_apache2::mod_rails"
+include_recipe "apache2"
+include_recipe "apache2::mod_headers"
+include_recipe "apache2::mod_rewrite"
+include_recipe "passenger_apache2::mod_rails"
 
 gem_package "bundler" do
   version "1.0.2"
