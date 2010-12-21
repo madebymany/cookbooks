@@ -35,7 +35,7 @@ template "/etc/memcached.conf" do
   group "root"
   mode "0644"
   variables(
-    :ipaddress => node[:memcached][:ipaddress] || "0.0.0.0",
+    :ipaddress => node[:memcached][:ipaddress] || node[:ipaddress],
     :user => node[:memcached][:user],
     :port => node[:memcached][:port],
     :memory => node[:memcached][:memory]
