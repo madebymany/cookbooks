@@ -29,6 +29,7 @@ bash "copy_authorized_keys" do
     cp /home/ubuntu/.ssh/authorized_keys #{node[:rails_app][:home]}/.ssh/authorized_keys
     chown #{node[:rails_app][:user]} #{node[:rails_app][:home]}/.ssh/authorized_keys
   END
+  not_if { File.exist?("#{node[:rails_app][:home]}/.ssh/authorized_keys") }
 end
 
 template "/etc/apache2/sites-available/#{node[:rails_app][:name]}" do
