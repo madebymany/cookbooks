@@ -35,13 +35,12 @@ apt-get install -y build-essential curl ruby1.8 || croak
 inform "Installing RubyGems for system Ruby interpreter"
 ( mkdir -p $HOME/src && \
   cd $HOME/src && \
-  curl -L 'http://production.cf.rubygems.org/rubygems/rubygems-1.8.7.tgz' | tar zxv && \
+  curl -L 'http://production.cf.rubygems.org/rubygems/rubygems-1.8.7.tgz' | tar zx && \
   cd rubygems-1.8.7 && \
-  ruby setup.rb ) || croak
+  ruby1.8 setup.rb --format-executable ) || croak
 
 inform "Installing Chef"
-( gem install -v 0.10.4 chef --no-rdoc --no-ri && \
-  ln -s /var/lib/gems/1.8/bin/chef /usr/local/bin/ ) || croak
+gem1.8 install -v 0.10.4 chef --no-rdoc --no-ri || croak
 
 inform "Creating directory for Chef files"
 mkdir -p /etc/chef || croak
