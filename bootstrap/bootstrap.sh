@@ -33,8 +33,7 @@ inform "Setting up build environment"
 apt-get install -y build-essential curl || croak
 
 inform "Installing Ruby"
-if [ $INSTALL_RUBY -eq "REE1.8.7" ]
-then
+if [ $INSTALL_RUBY -eq "REE1.8.7" ]; then
 case `uname -m` in
   x86_64)
     RDEB="http://rubyenterpriseedition.googlecode.com/files/ruby-enterprise_1.8.7-2011.03_amd64_ubuntu10.04.deb"
