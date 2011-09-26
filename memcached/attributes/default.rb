@@ -1,3 +1,4 @@
-set_unless[:memcached][:memory] = 64
-set_unless[:memcached][:port] = 11211
-set_unless[:memcached][:user] = "nobody"
+default[:memcached][:memory] = 64
+default[:memcached][:port] = 11211
+default[:memcached][:user] = "nobody"
+default[:memcached][:listen] = "0.0.0.0"

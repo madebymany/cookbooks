@@ -1,7 +1,7 @@
 #
 # Author:: AJ Christensen (<aj@opscode.com>)
 # Cookbook Name:: database
-# Recipe:: ebs_volume
+# Recipe:: snapshot
 #
 # Copyright 2009-2010, Opscode, Inc.
 #
@@ -20,20 +20,16 @@
 include_recipe "aws"
 include_recipe "xfs"
 
-require 'rubygems'
-Gem.clear_paths
-require 'mysql'
-
 %w{ebs_vol_dev db_role app_environment username password aws_access_key_id aws_secret_access_key snapshots_to_keep volume_id}.collect do |key|
   Chef::Application.fatal!("Required db_snapshot configuration #{key} not found.", -47) unless node.db_snapshot.has_key? key
 end
 
-mysql_database node.db_snapshot.app_environment do
-  provider "mysql_database"
-  action :flush_tables_with_read_lock
-  host "localhost"
-  username node.db_snapshot.username
-  password node.db_snapshot.password
+connection_info = {:host => localhost, :username => node.db_snapshot.username, :password => node.db_snapshot.password}
+
+mysql_database "locking tables for #{node.db_snapshot.app_environment}" do
+  connection connection_info
+  sql "flush tables with read lock"
+  action :query
 end
 
 execute "xfs freeze" do
@@ -41,21 +37,26 @@ execute "xfs freeze" do
 end
 
 aws_ebs_volume "#{node.db_snapshot.db_role.first}_#{node.db_snapshot.app_environment}" do
-  provider "aws_ebs_volume"
   aws_access_key node.db_snapshot.aws_access_key_id
   aws_secret_access_key node.db_snapshot.aws_secret_access_key
   size 50
   device node.db_snapshot.ebs_vol_dev
   snapshots_to_keep node.db_snapshot.snapshots_to_keep
-  action [ :prune, :snapshot ]
+  action :snapshot
   volume_id node.db_snapshot.volume_id
+  ignore_failure true # if this fails, continue to unfreeze and unlock
 end
-
 
 execute "xfs unfreeze" do
   command "xfs_freeze -u #{node.db_snapshot.ebs_vol_dev}"
 end
 
-mysql_database node.db_snapshot.app_environment do
-  action :unflush_tables
+mysql_database "unflushing tables for #{node.db_snapshot.app_environment}" do
+  connection connection_info
+  sql "unlock tables"
+  action :query
+end
+
+aws_ebs_volume "#{node.db_snapshot.db_role.first}_#{node.db_snapshot.app_environment}" do
+  action :prune
 end

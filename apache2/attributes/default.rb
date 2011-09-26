@@ -19,24 +19,50 @@
 
 # Where the various parts of apache are
 case platform
-when "redhat","centos","fedora","suse"
+when "redhat","centos","scientific","fedora","suse"
   set[:apache][:dir]     = "/etc/httpd"
   set[:apache][:log_dir] = "/var/log/httpd"
   set[:apache][:user]    = "apache"
+  set[:apache][:group]   = "apache"
   set[:apache][:binary]  = "/usr/sbin/httpd"
   set[:apache][:icondir] = "/var/www/icons/"
+  set[:apache][:cache_dir] = "/var/cache/httpd"
+  if node.platform_version.to_f >= 6 then
+    set[:apache][:pid_file] = "/var/run/httpd/httpd.pid"
+  else
+    set[:apache][:pid_file] = "/var/run/httpd.pid"
+  end
+  set[:apache][:lib_dir] = node[:kernel][:machine] == "i386" ? "/usr/lib/httpd" : "/usr/lib64/httpd"
 when "debian","ubuntu"
   set[:apache][:dir]     = "/etc/apache2"
   set[:apache][:log_dir] = "/var/log/apache2"
   set[:apache][:user]    = "www-data"
+  set[:apache][:group]   = "www-data"
   set[:apache][:binary]  = "/usr/sbin/apache2"
   set[:apache][:icondir] = "/usr/share/apache2/icons"
+  set[:apache][:cache_dir] = "/var/cache/apache2"
+  set[:apache][:pid_file]  = "/var/run/apache2.pid"
+  set[:apache][:lib_dir] = "/usr/lib/apache2"
+when "arch"
+  set[:apache][:dir]     = "/etc/httpd"
+  set[:apache][:log_dir] = "/var/log/httpd"
+  set[:apache][:user]    = "http"
+  set[:apache][:group]   = "http"
+  set[:apache][:binary]  = "/usr/sbin/httpd"
+  set[:apache][:icondir] = "/usr/share/httpd/icons"
+  set[:apache][:cache_dir] = "/var/cache/httpd"
+  set[:apache][:pid_file]  = "/var/run/httpd/httpd.pid"
+  set[:apache][:lib_dir] = "/usr/lib/httpd"
 else
   set[:apache][:dir]     = "/etc/apache2"
   set[:apache][:log_dir] = "/var/log/apache2"
   set[:apache][:user]    = "www-data"
+  set[:apache][:group]   = "www-data"
   set[:apache][:binary]  = "/usr/sbin/apache2"
   set[:apache][:icondir] = "/usr/share/apache2/icons"
+  set[:apache][:cache_dir] = "/var/cache/apache2"
+  set[:apache][:pid_file]  = "logs/httpd.pid"
+  set[:apache][:lib_dir] = "/usr/lib/apache2"
 end
 
 ###
@@ -45,33 +71,33 @@ end
 ###
 
 # General settings
-set_unless[:apache][:listen_ports] = [ "80","443" ]
-set_unless[:apache][:contact] = "ops@example.com"
-set_unless[:apache][:timeout] = 300
-set_unless[:apache][:keepalive] = "On"
-set_unless[:apache][:keepaliverequests] = 100
-set_unless[:apache][:keepalivetimeout] = 5
+default[:apache][:listen_ports] = [ "80","443" ]
+default[:apache][:contact] = "ops@example.com"
+default[:apache][:timeout] = 300
+default[:apache][:keepalive] = "On"
+default[:apache][:keepaliverequests] = 100
+default[:apache][:keepalivetimeout] = 5
 
 # Security
-set_unless[:apache][:servertokens] = "Prod"
-set_unless[:apache][:serversignature] = "On"
-set_unless[:apache][:traceenable] = "On"
+default[:apache][:servertokens] = "Prod"
+default[:apache][:serversignature] = "On"
+default[:apache][:traceenable] = "On"
 
 # mod_auth_openids
-set_unless[:apache][:allowed_openids] = Array.new
+default[:apache][:allowed_openids] = Array.new
 
 # Prefork Attributes
-set_unless[:apache][:prefork][:startservers] = 16
-set_unless[:apache][:prefork][:minspareservers] = 16
-set_unless[:apache][:prefork][:maxspareservers] = 32
-set_unless[:apache][:prefork][:serverlimit] = 400
-set_unless[:apache][:prefork][:maxclients] = 400
-set_unless[:apache][:prefork][:maxrequestsperchild] = 10000
+default[:apache][:prefork][:startservers] = 16
+default[:apache][:prefork][:minspareservers] = 16
+default[:apache][:prefork][:maxspareservers] = 32
+default[:apache][:prefork][:serverlimit] = 400
+default[:apache][:prefork][:maxclients] = 400
+default[:apache][:prefork][:maxrequestsperchild] = 10000
 
 # Worker Attributes
-set_unless[:apache][:worker][:startservers] = 4
-set_unless[:apache][:worker][:maxclients] = 1024
-set_unless[:apache][:worker][:minsparethreads] = 64
-set_unless[:apache][:worker][:maxsparethreads] = 192
-set_unless[:apache][:worker][:threadsperchild] = 64
-set_unless[:apache][:worker][:maxrequestsperchild] = 0
+default[:apache][:worker][:startservers] = 4
+default[:apache][:worker][:maxclients] = 1024
+default[:apache][:worker][:minsparethreads] = 64
+default[:apache][:worker][:maxsparethreads] = 192
+default[:apache][:worker][:threadsperchild] = 64
+default[:apache][:worker][:maxrequestsperchild] = 0

@@ -21,135 +21,21 @@
 # limitations under the License.
 #
 
-root_group = value_for_platform(
-  "openbsd" => { "default" => "wheel" },
-  "freebsd" => { "default" => "wheel" },
-  "default" => "root"
-)
+Chef::Log.warn("This recipe is deprecated. It has been replaced by chef-server::rubygems-install.")
+Chef::Log.warn("Including the chef-server::rubygems-install recipe now.")
 
-include_recipe "chef::bootstrap_client"
+node.set['chef_server']['init_style'] = node['chef']['init_style']
+node.set['chef_server']['path'] = node['chef']['path']
+node.set['chef_server']['run_path'] = node['chef']['run_path']
+node.set['chef_server']['cache_path'] = node['chef']['cache_path']
+node.set['chef_server']['backup_path'] = node['chef']['backup_path']
+node.set['chef_server']['umask'] = node['chef']['umask']
+node.set['chef_server']['url'] = node['chef']['server_url']
+node.set['chef_server']['log_dir'] = node['chef']['log_dir']
+node.set['chef_server']['api_port'] = node['chef']['server_port']
+node.set['chef_server']['webui_port'] = node['chef']['webui_port']
+node.set['chef_server']['webui_enabled'] = node['chef']['webui_enabled']
+node.set['chef_server']['solr_heap_size'] = node['chef']['solr_heap_size']
+node.set['chef_server']['validation_client_name'] = node['chef']['validation_client_name']
 
-case node[:platform]
-when "ubuntu"
-  if node[:platform_version].to_f >= 9.10
-    include_recipe "couchdb"
-  elsif node[:platform_version].to_f >= 8.10
-    include_recipe "couchdb::source"
-  end
-
-  include_recipe "java"
-  include_recipe "rabbitmq_chef"
-
-when "debian"
-  if node[:platform_version] =~ /.*sid/
-    include_recipe "couchdb"
-  else
-    include_recipe "couchdb::source"
-  end
-
-  include_recipe "java"
-  include_recipe "rabbitmq_chef"
-
-when "centos","redhat","fedora"
-  include_recipe "java"
-  include_recipe "couchdb"
-  include_recipe "rabbitmq_chef"
-else
-  log("Unknown platform for CouchDB. Manual installation of CouchDB required.")
-  log("Unknown platform for RabbitMQ. Manual installation of RabbitMQ required.")
-  log("Unknown platform for Java. Manual installation of Java required.")
-  log("Components that rely on these packages being installed may fail to start.")
-end
-
-include_recipe "zlib"
-include_recipe "xml"
-
-%w{ chef-server chef-server-api chef-solr }.each do |gem|
-  gem_package gem do
-    version node[:chef][:server_version]
-  end
-end
-
-if node[:chef][:webui_enabled]
-  gem_package "chef-server-webui" do
-    version node[:chef][:server_version]
-  end
-end
-
-if node[:chef][:server_log] == "STDOUT"
-  server_log = node[:chef][:server_log]
-  show_time  = "false"
-else
-  server_log = "\"#{node[:chef][:server_log]}\""
-  indexer_log = "\"#{node[:chef][:indexer_log]}\""
-  show_time  = "true"
-end
-
-template "/etc/chef/server.rb" do
-  source "server.rb.erb"
-  owner "root"
-  group root_group
-  mode "600"
-  variables(
-    :server_log => server_log,
-    :show_time  => show_time
-  )
-end
-
-%w{ cache search_index }.each do |dir|
-  directory "#{node[:chef][:path]}/#{dir}" do
-    owner "root"
-    group root_group
-    mode "755"
-  end
-end
-
-directory "/etc/chef/certificates" do
-  owner "root"
-  group root_group
-  mode "700"
-end
-
-directory node[:chef][:run_path] do
-  owner "root"
-  group root_group
-  mode "755"
-end
-
-case node[:chef][:init_style]
-when "runit"
-  include_recipe "runit"
-  runit_service "chef-solr"
-  runit_service "chef-solr-indexer"
-  runit_service "chef-server"
-  service "chef-server" do
-    restart_command "sv int chef-server"
-  end
-  runit_service "chef-server-webui" if node[:chef][:webui_enabled]
-when "init"
-  show_time  = "true"
-
-  service "chef-solr" do
-    action :nothing
-  end
-
-  service "chef-solr-indexer" do
-    action :nothing
-  end
-
-  service "chef-server" do
-    action :nothing
-  end
-
-  service "chef-server-webui" do
-    action :nothing
-  end if node[:chef][:webui_enabled]
-
-  log("You specified service style 'init'.")
-  log("'init' scripts available in #{node[:languages][:ruby][:gems_dir]}/gems/chef-#{node[:chef][:client_version]}/distro")
-when "bsd"
-  log("You specified service style 'bsd'. You will need to set up your rc.local file for chef-indexer and chef-server.")
-  log("Server startup command: chef-server -d")
-else
-  log("Could not determine service init style, manual intervention required to set up indexer and server services.")
-end
+include_recipe "chef-server::rubygems-install"
