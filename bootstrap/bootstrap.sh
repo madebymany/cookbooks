@@ -46,10 +46,10 @@ esac
 else
 case `uname -m` in
   x86_64)
-    RDEB="https://github.com/downloads/madebymany/cookbooks/ruby-1.9.2-p290_i386.deb"
+    RDEB="TODO"
     ;;
   *)
-    RDEB="TODO"
+    RDEB="https://github.com/downloads/madebymany/cookbooks/ruby-1.9.2-p290_i386.deb"
     ;;
 esac
 
