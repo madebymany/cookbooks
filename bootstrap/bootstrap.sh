@@ -32,19 +32,32 @@ apt-get update || croak
 inform "Setting up build environment"
 apt-get install -y build-essential curl || croak
 
-inform "Installing Ruby Enterprise Edition"
+inform "Installing Ruby"
+if [ $INSTALL_RUBY eq "REE1.8.7" ]
+then
 case `uname -m` in
   x86_64)
-    REE="http://rubyenterpriseedition.googlecode.com/files/ruby-enterprise_1.8.7-2011.03_amd64_ubuntu10.04.deb"
+    RDEB="http://rubyenterpriseedition.googlecode.com/files/ruby-enterprise_1.8.7-2011.03_amd64_ubuntu10.04.deb"
     ;;
   *)
-    REE="http://rubyenterpriseedition.googlecode.com/files/ruby-enterprise_1.8.7-2011.03_i386_ubuntu10.04.deb"
+    RDEB="http://rubyenterpriseedition.googlecode.com/files/ruby-enterprise_1.8.7-2011.03_i386_ubuntu10.04.deb"
     ;;
 esac
-echo "Fetching ${REE}"
-curl -s -L -o ree.deb "${REE}" || croak
-dpkg -i ree.deb || croak
-rm ree.deb
+else
+case `uname -m` in
+  x86_64)
+    RDEB="https://github.com/downloads/madebymany/cookbooks/ruby-1.9.2-p290_i386.deb"
+    ;;
+  *)
+    RDEB="TODO"
+    ;;
+esac
+
+fi
+echo "Fetching ${RDEB}"
+curl -s -L -o rdeb.deb "${RDEB}" || croak
+dpkg -i rdeb.deb || croak
+rm rdeb.deb
 
 inform "Installing Chef"
 gem install -v 0.10.4 chef --no-rdoc --no-ri || croak
