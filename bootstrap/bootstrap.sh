@@ -33,7 +33,7 @@ inform "Setting up build environment"
 apt-get install -y build-essential curl || croak
 
 inform "Installing Ruby"
-if [ $INSTALL_RUBY eq "REE1.8.7" ]
+if [ $INSTALL_RUBY -eq "REE1.8.7" ]
 then
 case `uname -m` in
   x86_64)
@@ -54,6 +54,7 @@ case `uname -m` in
 esac
 
 fi
+
 echo "Fetching ${RDEB}"
 curl -s -L -o rdeb.deb "${RDEB}" || croak
 dpkg -i rdeb.deb || croak
