@@ -1,9 +1,9 @@
 case platform 
 when "ubuntu","debian"
-  set_unless[:ntp][:service] = "ntp"
-when "redhat","centos","fedora"
-  set_unless[:ntp][:service] = "ntpd"
+  default[:ntp][:service] = "ntp"
+when "redhat","centos","fedora","scientific"
+  default[:ntp][:service] = "ntpd"
 end
 
-set_unless[:ntp][:is_server] = false
-set_unless[:ntp][:servers]   = ["0.us.pool.ntp.org", "1.us.pool.ntp.org"]
+default[:ntp][:is_server] = false
+default[:ntp][:servers]   = ["0.pool.ntp.org", "1.pool.ntp.org"]
