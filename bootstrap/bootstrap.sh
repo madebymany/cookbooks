@@ -33,26 +33,28 @@ inform "Setting up build environment"
 apt-get install -y build-essential curl || croak
 
 inform "Installing Ruby"
-if [ $INSTALL_RUBY -eq "REE1.8.7" ]; then
-case `uname -m` in
-  x86_64)
-    RDEB="http://rubyenterpriseedition.googlecode.com/files/ruby-enterprise_1.8.7-2011.03_amd64_ubuntu10.04.deb"
+case $INSTALL_RUBY in
+  1.9.2)
+    case `uname -m` in
+      x86_64)
+        RDEB=""
+        ;;
+      *)
+        RDEB="https://github.com/downloads/madebymany/cookbooks/ruby-1.9.2-p290_i386.deb"
+        ;;
+    esac
     ;;
-  *)
-    RDEB="http://rubyenterpriseedition.googlecode.com/files/ruby-enterprise_1.8.7-2011.03_i386_ubuntu10.04.deb"
-    ;;
-esac
-else
-case `uname -m` in
-  x86_64)
-    RDEB="TODO"
-    ;;
-  *)
-    RDEB="https://github.com/downloads/madebymany/cookbooks/ruby-1.9.2-p290_i386.deb"
-    ;;
-esac
-
-fi
+    *)
+      case `uname -m` in
+        x86_64)
+          RDEB="http://rubyenterpriseedition.googlecode.com/files/ruby-enterprise_1.8.7-2011.03_amd64_ubuntu10.04.deb"
+          ;;
+        *)
+          RDEB="http://rubyenterpriseedition.googlecode.com/files/ruby-enterprise_1.8.7-2011.03_i386_ubuntu10.04.deb"
+          ;;
+      esac
+      ;;
+  esac
 
 echo "Fetching ${RDEB}"
 curl -s -L -o rdeb.deb "${RDEB}" || croak
