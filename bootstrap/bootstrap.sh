@@ -32,9 +32,9 @@ apt-get update || croak
 inform "Setting up build environment"
 apt-get install -y build-essential curl || croak
 
-inform "Installing Ruby"
-case $INSTALL_RUBY in
-  1.9.2)
+inform "Installing Ruby ${INSTALL_RUBY}"
+case "$INSTALL_RUBY" in
+  '1.9.2')
     case `uname -m` in
       x86_64)
         RDEB=""
