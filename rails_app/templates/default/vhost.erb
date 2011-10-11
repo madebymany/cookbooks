@@ -38,10 +38,12 @@
   RewriteRule ^.*$ /system/maintenance.html [R=503,L]
 
   # Rewrite (some) domains to canonical domain
-  <% node[:rails_app][:redirections].each do |domain|
-     pattern = domain.sub(/\$$/, "(:.*)?$").gsub(/\./, "\\\\.") %>
+  <% if node[:rails_app][:redirections] %>
+    <% node[:rails_app][:redirections].each do |domain|
+       pattern = domain.sub(/\$$/, "(:.*)?$").gsub(/\./, "\\\\.") %>
   RewriteCond %{HTTP_HOST} <%= pattern %> [NC]
   RewriteRule ^/(.*) http://<%= node[:rails_app][:canonical_domain] %>/$1 [R=301,L]
+    <% end %>
   <% end %>
 
   # Deflate
