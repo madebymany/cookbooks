@@ -69,6 +69,15 @@ if node[:rails_app][:new_relic]
   end
 end
 
+if node[:rails_app][:other_configs]
+  node[:rails_app][:other_configs].each do |config|
+    template "#{node[:rails_app][:home]}/shared/config/#{config[:name]}.yml" do
+      source "#{config[:name]}.yml.erb"
+      owner node[:rails_app][:user]
+    end
+  end
+end
+
 bash "placate_apache" do
   user node[:rails_app][:user]
   code %{ ln -s #{ node[:rails_app][:home] }/releases #{ node[:rails_app][:home] }/current }
