@@ -70,9 +70,9 @@ if node[:rails_app][:new_relic]
 end
 
 if node[:rails_app][:other_configs]
-  node[:rails_app][:other_configs].each do |config|
-    template "#{node[:rails_app][:home]}/shared/config/#{config[:name]}.yml" do
-      source "#{config[:name]}.yml.erb"
+  node[:rails_app][:other_configs].each do |name, config|
+    template "#{node[:rails_app][:home]}/shared/config/#{name}.yml" do
+      source "#{name}.yml.erb"
       owner node[:rails_app][:user]
     end
   end
