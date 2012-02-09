@@ -9,6 +9,10 @@
 
   RailsEnv production
 
+  <% node[:rails_app][:passenger].each do |setting, value| -%> 
+    <%= "Passenger"+setting.gsub(/(^|_|\s+)([a-z])/){$2.upcase} %> <%= value %>
+  <% end -%>
+
   <Directory "<%= node[:rails_app][:home] %>/current/public">
     Header set Cache-Control "max-age=315360000"
     Options FollowSymLinks

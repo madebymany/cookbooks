@@ -72,8 +72,9 @@ end
 if node[:rails_app][:other_configs]
   node[:rails_app][:other_configs].each do |name, config|
     template "#{node[:rails_app][:home]}/shared/config/#{name}.yml" do
-      source "#{name}.yml.erb"
+      source "yamliser.erb"
       owner node[:rails_app][:user]
+      variables( :config => config )
     end
   end
 end
