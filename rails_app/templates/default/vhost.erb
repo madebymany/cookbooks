@@ -11,7 +11,7 @@
 
   <% node[:rails_app][:passenger].each do |setting, value| -%> 
     <%= "Passenger"+setting.gsub(/(^|_|\s+)([a-z])/){$2.upcase} %> <%= value %>
-  <% end -%>
+    <% end unless node[:rails_app][:passenger].nil? -%>
 
   <Directory "<%= node[:rails_app][:home] %>/current/public">
     Header set Cache-Control "max-age=315360000"
