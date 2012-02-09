@@ -74,6 +74,7 @@ wrapper.java.maxmemory=<%= @node[:activemq][:wrapper][:max_memory] %>
 # Application parameters.  Add parameters as needed starting from 1
 wrapper.app.parameter.1=org.apache.activemq.console.Main
 wrapper.app.parameter.2=start
+wrapper.app.parameter.3=xbean:../conf/activemq-stomp.xml
 
 #********************************************************************
 # Wrapper Logging Properties
