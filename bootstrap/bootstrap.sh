@@ -21,7 +21,7 @@ function croak {
 }
 
 inform "Checking for supported OS installation."
-lsb_release -d | grep -q "Ubuntu 10.04" || croak
+lsb_release -d | grep -q "Ubuntu" || croak
 
 command -v chef-solo >/dev/null && \
 happy_ending "Chef is already bootstrapped. Nothing more to do."
