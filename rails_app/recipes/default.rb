@@ -2,11 +2,8 @@ include_recipe "apache2"
 include_recipe "apache2::mod_headers"
 include_recipe "apache2::mod_rewrite"
 include_recipe "passenger_apache2::mod_rails"
-
-def fix_mash_to_hash(mash)
-  hash = {}
-  mash.each { |key, value| hash[key] = value.is_a?(Mash) ? fix_mash_to_hash(value) : value }
-  hash
+class Chef::Recipe
+    include MashFixing
 end
 
 gem_package "bundler" do
