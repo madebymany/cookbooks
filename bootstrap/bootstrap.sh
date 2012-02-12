@@ -45,6 +45,7 @@ case "$INSTALL_RUBY" in
          ;;
        *)
          RDEB="https://github.com/downloads/madebymany/packages/ruby-1.9.3-cp_i386.deb"
+     esac
      ;;
    '1.9.2')
      case `uname -m` in
@@ -57,15 +58,15 @@ case "$INSTALL_RUBY" in
      esac
      ;;
    *)
-    case `uname -m` in
+     case `uname -m` in
      x86_64)
        RDEB="http://rubyenterpriseedition.googlecode.com/files/ruby-enterprise_1.8.7-2011.03_amd64_ubuntu10.04.deb"
        ;;
      *)
        RDEB="http://rubyenterpriseedition.googlecode.com/files/ruby-enterprise_1.8.7-2011.03_i386_ubuntu10.04.deb"
        ;;
-    esac
-    ;;
+     esac
+     ;;
 esac
 
 echo "Fetching ${RDEB}"
