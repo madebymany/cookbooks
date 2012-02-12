@@ -37,7 +37,7 @@ install_from_release('redis') do
 end
 
 %w[ redis-benchmark redis-cli redis-server ].each do |redis_cmd|
-    link File.join("/usr/local/bin", redis_cmd) do
+    link File.join("/usr/bin", redis_cmd) do
       to File.join(node[:redis][:home_dir], redis_cmd)
       action :create
     end
