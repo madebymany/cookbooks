@@ -2,9 +2,6 @@ include_recipe "apache2"
 include_recipe "apache2::mod_headers"
 include_recipe "apache2::mod_rewrite"
 include_recipe "passenger_apache2::mod_rails"
-class Chef::Recipe
-    include MashFixing
-end
 
 gem_package "bundler" do
   version "1.0.22"
