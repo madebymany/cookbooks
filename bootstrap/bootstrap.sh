@@ -77,9 +77,6 @@ rm rdeb.deb
 inform "Installing Chef"
 gem install -v 0.10.4 chef --no-rdoc --no-ri || croak
 
-inform "Updating bundler"
-gem install bundler -v 1.0.22
-
 inform "Creating directory for Chef files"
 mkdir -p /etc/chef || croak
 
