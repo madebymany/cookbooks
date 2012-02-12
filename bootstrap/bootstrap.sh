@@ -21,7 +21,7 @@ function croak {
 }
 
 inform "Checking for supported OS installation."
-OS = $(lsb_release -d)
+OS=$(lsb_release -d)
 echo "${OS}" | grep -q "Ubuntu" || croak
 
 command -v chef-solo >/dev/null && \
@@ -37,39 +37,35 @@ libxslt-dev autoconf libc6-dev ncurses-dev automake libtool bison || croak
 
 
 inform "Installing Ruby ${INSTALL_RUBY}"
-case "${OS}" in
-  'Ubuntu 10.04')
-    case "$INSTALL_RUBY" in
-      '1.9.3')
-        case `uname -m` in
-          x86_64)
-            RDEB="https://github.com/downloads/madebymany/packages/ruby-1.9.3-cp_amd64.deb"
-            ;;
-          *)
-            RDEB="https://github.com/downloads/madebymany/packages/ruby-1.9.3-cp_i386.deb"
-        ;;
-      '1.9.2')
-        case `uname -m` in
-          x86_64)
-            RDEB="https://github.com/downloads/madebymany/packages/ruby-1.9.2-p290_amd64.deb"
-            ;;
-          *)
-            RDEB="https://github.com/downloads/madebymany/packages/ruby-1.9.2-p290_i386.deb"
-            ;;
-        esac
-        ;;
-      *)
-       case `uname -m` in
-        x86_64)
-          RDEB="http://rubyenterpriseedition.googlecode.com/files/ruby-enterprise_1.8.7-2011.03_amd64_ubuntu10.04.deb"
-          ;;
-        *)
-          RDEB="http://rubyenterpriseedition.googlecode.com/files/ruby-enterprise_1.8.7-2011.03_i386_ubuntu10.04.deb"
-          ;;
-       esac
-      ;;
-   esac
-   ;;
+case "$INSTALL_RUBY" in
+  '1.9.3')
+     case `uname -m` in
+       x86_64)
+         RDEB="https://github.com/downloads/madebymany/packages/ruby-1.9.3-cp_amd64.deb"
+         ;;
+       *)
+         RDEB="https://github.com/downloads/madebymany/packages/ruby-1.9.3-cp_i386.deb"
+     ;;
+   '1.9.2')
+     case `uname -m` in
+       x86_64)
+         RDEB="https://github.com/downloads/madebymany/packages/ruby-1.9.2-p290_amd64.deb"
+         ;;
+       *)
+         RDEB="https://github.com/downloads/madebymany/packages/ruby-1.9.2-p290_i386.deb"
+         ;;
+     esac
+     ;;
+   *)
+    case `uname -m` in
+     x86_64)
+       RDEB="http://rubyenterpriseedition.googlecode.com/files/ruby-enterprise_1.8.7-2011.03_amd64_ubuntu10.04.deb"
+       ;;
+     *)
+       RDEB="http://rubyenterpriseedition.googlecode.com/files/ruby-enterprise_1.8.7-2011.03_i386_ubuntu10.04.deb"
+       ;;
+    esac
+    ;;
 esac
 
 echo "Fetching ${RDEB}"
