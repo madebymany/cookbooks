@@ -14,7 +14,7 @@ save <%= interval %> <%= keys %>
 rdbcompression yes
 dbfilename dump.rdb
 
-dir /var/lib/redis
+dir <%= @node[:redis][:data_dir] %>
 
 <% if @node[:redis][:slave] %>
 slaveof <%= @node[:redis][:slave][:master_ip] %> <%= @node[:redis][:slave][:port] || @node[:redis][:port] %>
