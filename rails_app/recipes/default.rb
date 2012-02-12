@@ -3,8 +3,14 @@ include_recipe "apache2::mod_headers"
 include_recipe "apache2::mod_rewrite"
 include_recipe "passenger_apache2::mod_rails"
 
+def fix_mash_to_hash(mash)
+  hash = {}
+  mash.each { |key, value| hash[key] = value.is_a?(Mash) ? fix_mash_to_hash(value) : value }
+  hash
+end
+
 gem_package "bundler" do
-  version "1.0.2"
+  version "1.0.22"
   action :install
 end
 
@@ -74,7 +80,7 @@ if node[:rails_app][:other_configs]
     template "#{node[:rails_app][:home]}/shared/config/#{name}.yml" do
       source "yamliser.erb"
       owner node[:rails_app][:user]
-      variables( :config => config.to_hash )
+      variables( :config => fix_mash_to_hash(config) )
     end
   end
 end
