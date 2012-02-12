@@ -21,7 +21,8 @@ function croak {
 }
 
 inform "Checking for supported OS installation."
-lsb_release -d | grep -q "Ubuntu" || croak
+OS = $(lsb_release -d)
+echo "${OS}" | grep -q "Ubuntu" || croak
 
 command -v chef-solo >/dev/null && \
 happy_ending "Chef is already bootstrapped. Nothing more to do."
@@ -30,31 +31,46 @@ inform "Updating package index"
 apt-get update || croak
 
 inform "Setting up build environment"
-apt-get install -y build-essential curl || croak
+apt-get install -y build-essential openssl libreadline6 libreadline6-dev curl git-core \
+zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-0 libsqlite3-dev sqlite3 libxml2-dev \
+libxslt-dev autoconf libc6-dev ncurses-dev automake libtool bison || croak
+
 
 inform "Installing Ruby ${INSTALL_RUBY}"
-case "$INSTALL_RUBY" in
-  '1.9.2')
-    case `uname -m` in
-      x86_64)
-        RDEB=""
+case "${OS}" in
+  'Ubuntu 10.04')
+    case "$INSTALL_RUBY" in
+      '1.9.3')
+        case `uname -m` in
+          x86_64)
+            RDEB="https://github.com/downloads/madebymany/packages/ruby-1.9.3-cp_amd64.deb"
+            ;;
+          *)
+            RDEB="https://github.com/downloads/madebymany/packages/ruby-1.9.3-cp_i386.deb"
+        ;;
+      '1.9.2')
+        case `uname -m` in
+          x86_64)
+            RDEB="https://github.com/downloads/madebymany/packages/ruby-1.9.2-p290_amd64.deb"
+            ;;
+          *)
+            RDEB="https://github.com/downloads/madebymany/packages/ruby-1.9.2-p290_i386.deb"
+            ;;
+        esac
         ;;
       *)
-        RDEB="https://github.com/downloads/madebymany/cookbooks/ruby-1.9.2-p290_i386.deb"
-        ;;
-    esac
-    ;;
-    *)
-      case `uname -m` in
+       case `uname -m` in
         x86_64)
           RDEB="http://rubyenterpriseedition.googlecode.com/files/ruby-enterprise_1.8.7-2011.03_amd64_ubuntu10.04.deb"
           ;;
         *)
           RDEB="http://rubyenterpriseedition.googlecode.com/files/ruby-enterprise_1.8.7-2011.03_i386_ubuntu10.04.deb"
           ;;
-      esac
+       esac
       ;;
-  esac
+   esac
+   ;;
+esac
 
 echo "Fetching ${RDEB}"
 curl -s -L -o rdeb.deb "${RDEB}" || croak
