@@ -7,6 +7,8 @@ default.redis[:bind_address] = "0.0.0.0"
 default.redis[:timeout] = 300
 default.redis[:databases] = 16
 
+default.redis[:data_dir] = "/var/lib/redis"
+
 # max memory in MB
 default.redis[:max_memory] = "250"
 
