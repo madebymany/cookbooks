@@ -74,7 +74,7 @@ if node[:rails_app][:other_configs]
     template "#{node[:rails_app][:home]}/shared/config/#{name}.yml" do
       source "yamliser.erb"
       owner node[:rails_app][:user]
-      variables( :config => config )
+      variables( :config => config.to_hash )
     end
   end
 end
