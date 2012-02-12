@@ -29,7 +29,6 @@ directory "/etc/redis" do
 end
 
 install_from_release('redis') do
-    prefix_root  "/usr"
     release_url  node[:redis][:install_url]
     version      node[:redis][:version]
     home_dir     node[:redis][:home_dir]
