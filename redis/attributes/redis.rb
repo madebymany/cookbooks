@@ -3,6 +3,7 @@ default.redis[:group] = "redis"
 
 default[:redis][:home_dir] = "/usr/local/share/redis"
 default[:redis][:install_url] = 'http://redis.googlecode.com/files/redis-2.4.7.tar.gz'
+default[:redis][:version] = "2.4.7"
 
 default.redis[:port] = 6379
 default.redis[:bind_address] = "0.0.0.0"
