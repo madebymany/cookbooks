@@ -1,3 +1,6 @@
+include_recipe "install_from"
+include_recipe "monit"
+
 group(node[:redis][:group]){ gid 335 }
 user node[:redis][:user] do
     comment   "Redis-server runner"
@@ -6,7 +9,7 @@ user node[:redis][:user] do
     shell     "/bin/false"
 end
 
-directory "/var/log/redis" do
+directory [:redis][:log_dir] do
   owner node[:redis][:user]
   group node[:redis][:group]
   mode      "0755"
@@ -21,7 +24,7 @@ directory node[:redis][:data_dir] do
   recursive true
 end
 
-directory "/etc/redis" do
+directory [:redis][:conf_dir] do
   owner node[:redis][:user]
   group node[:redis][:group]
   mode      "0755"
@@ -29,30 +32,17 @@ directory "/etc/redis" do
 end
 
 install_from_release('redis') do
-    release_url  node[:redis][:install_url]
-    version      node[:redis][:version]
+    release_url  node[:redis][:release_url]
     home_dir     node[:redis][:home_dir]
+    version      node[:redis][:version]
     action       [ :install, :install_with_make ]
-    not_if{      File.exists?(File.join(node[:redis][:home_dir], "redis-server")) }
+    not_if{ File.exists?(File.join(node[:redis][:home_dir], 'redis-server')) }
 end
 
-%w[ redis-benchmark redis-cli redis-server ].each do |redis_cmd|
-    link File.join("/usr/bin", redis_cmd) do
-      to File.join(node[:redis][:home_dir], redis_cmd)
-      action :create
-    end
-end
-
-service "redis-server" do
-  action :enable
-end
-
-template "/etc/redis/redis.conf" do
+template "#{node[:redis][:conf_dir]}/redis.conf" do
   owner node[:redis][:user]
   group node[:redis][:group]
   notifies :restart, resources(:service => "redis-server")
 end
 
-service "redis-server" do
-  action :start
-end
+monitrc "redis-server", {:pidfile => node[:redis][:pid_file], :confdir => node[:redis][:conf_dir]}, :immediately
