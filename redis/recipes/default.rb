@@ -36,7 +36,7 @@ install_from_release('redis') do
     home_dir     node[:redis][:home_dir]
     version      node[:redis][:version]
     action       [ :install, :install_with_make ]
-    not_if{ File.exists?(File.join(node[:redis][:home_dir], 'redis-server')) }
+    not_if{ File.exists?("#{node[:redis][:home_dir]}-#{node[:redis][:version]}") }
 end
 
 template "#{node[:redis][:conf_dir]}/redis.conf" do
