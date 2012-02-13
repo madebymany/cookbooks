@@ -1,6 +1,7 @@
 check process redis
-  with pidfile <%= pidfile %>
-  start program = "/usr/bin/redis-server <%= confdir %>/redis.conf"
+  with pidfile <%= @pidfile %>
+  start program = "/usr/local/bin/redis-server <%= @confdir %>/redis.conf"
+    as uid redis and gid redis
   stop program = "/bin/echo SHUTDOWN | nc localhost 6379"
   if failed host 127.0.0.1 port 6379 then restart
   if 5 restarts within 5 cycles then timeout
