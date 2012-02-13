@@ -56,7 +56,7 @@ script "install_something" do
     user "root"
     cwd "/tmp"
     code <<-EOH
-    echo 'scout ALL=(root)NOPASSWD:/usr/bin/passenger-status' > /etc/sudoers
+    echo 'scout ALL=(root)NOPASSWD:/usr/bin/passenger-status' >> /etc/sudoers
     EOH
 end
 
