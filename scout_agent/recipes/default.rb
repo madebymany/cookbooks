@@ -49,3 +49,10 @@ if node[:scout_agent][:key]
 else
   Chef::Log.info "Add a [:scout_agent][:key] attribute to configure this node's Scout Agent"
 end
+
+template "/etc/sudoers.d/scout" do
+  source "scout.sudoers"
+  mode 0440
+  owner "root"
+  group "root"
+end
