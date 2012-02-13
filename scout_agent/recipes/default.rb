@@ -6,6 +6,7 @@
 group node[:scout_agent][:group] do
   action [ :create, :manage ]
 end
+
 user node[:scout_agent][:user] do
   comment "Scout Agent"
   gid node[:scout_agent][:group]
@@ -15,9 +16,14 @@ user node[:scout_agent][:user] do
 end
 
 # install scout agent gem
-gem_package "scout" do
-  version node[:scout_agent][:version]
-  action :install
+node [:scout_agent][:gems].each do |gem|
+  gem_package gem do
+    action :install
+  end
+end unless node[:scout_agent][:gems].nil?
+
+gem_package "bundler" do
+   action :install
 end
 
 if node[:scout_agent][:key]
