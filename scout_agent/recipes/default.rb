@@ -16,6 +16,11 @@ user node[:scout_agent][:user] do
 end
 
 # install scout agent gem
+gem_package "scout" do
+  version node[:scout_agent][:version]
+  action :install
+end
+
 node [:scout_agent][:gems].each do |gem|
   gem_package gem do
     action :install
