@@ -51,7 +51,7 @@ else
 end
 
 template "/etc/sudoers.d/scout" do
-  source "scout.sudoers"
+  source "scout.sudoers.erb"
   mode 0440
   owner "root"
   group "root"
