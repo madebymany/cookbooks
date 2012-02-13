@@ -1,14 +1,14 @@
 daemonize yes
-pidfile /var/run/redis.pid
+pidfile <%= @node[:redis][:pid_file] %>
 port <%= @node[:redis][:port] %>
 bind <%= @node[:redis][:bind_address] %>
-timeout <%= @node[:redis][:timeout ] %>
+timeout <%= @node[:redis][:timeout ] %> 
 loglevel notice
-logfile /var/log/redis/redis-server.log
+logfile <%= @node[:redis][:log_dir] %>/redis-server.log
 databases <%= @node[:redis][:databases] %>
 
 <% @node[:redis][:snapshots].each do |interval, keys| %>
-save <%= interval %> <%= keys %>
+  save <%= interval %> <%= keys %>
 <% end %>
 
 rdbcompression yes
@@ -17,18 +17,18 @@ dbfilename dump.rdb
 dir <%= @node[:redis][:data_dir] %>
 
 <% if @node[:redis][:slave] %>
-slaveof <%= @node[:redis][:slave][:master_ip] %> <%= @node[:redis][:slave][:port] || @node[:redis][:port] %>
-<% if @node[:redis][:slave][:password] %>
-masterauth <%= @node[:redis][:slave][:password] %>
-<% end %>
+  slaveof <%= @node[:redis][:slave][:master_ip] %> <%= @node[:redis][:slave][:port] || @node[:redis][:port] %>
+  <% if @node[:redis][:slave][:password] %>
+    masterauth <%= @node[:redis][:slave][:password] %>
+  <% end %>
 <% end %>
 
 <% if @node[:redis][:password] %>
-requirepass <%= @node[:redis][:password] %>
+  requirepass <%= @node[:redis][:password] %>
 <% end %>
 
 <% if @node[:redis][:max_clients] %>
-maxclients <%= @node[:redis][:max_clients] %>
+  maxclients <%= @node[:redis][:max_clients] %>
 <% end %>
 
 
@@ -38,5 +38,3 @@ maxmemory <%= @node[:redis][:max_memory].to_i * 1024 * 1024 %>
 appendonly no
 appendfsync always
 glueoutputbuf yes
-shareobjects no
-shareobjectspoolsize 1024

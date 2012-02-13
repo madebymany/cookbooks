@@ -9,7 +9,7 @@ user node[:redis][:user] do
     shell     "/bin/false"
 end
 
-directory [:redis][:log_dir] do
+directory node[:redis][:log_dir] do
   owner node[:redis][:user]
   group node[:redis][:group]
   mode      "0755"
@@ -24,7 +24,7 @@ directory node[:redis][:data_dir] do
   recursive true
 end
 
-directory [:redis][:conf_dir] do
+directory node[:redis][:conf_dir] do
   owner node[:redis][:user]
   group node[:redis][:group]
   mode      "0755"
@@ -42,7 +42,6 @@ end
 template "#{node[:redis][:conf_dir]}/redis.conf" do
   owner node[:redis][:user]
   group node[:redis][:group]
-  notifies :restart, resources(:service => "redis-server")
 end
 
 monitrc "redis-server", {:pidfile => node[:redis][:pid_file], :confdir => node[:redis][:conf_dir]}, :immediately
