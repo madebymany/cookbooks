@@ -12,14 +12,14 @@ node[:rails_app][:packages].each do |pkg_name|
   package pkg_name
 end
 
+user node[:rails_app][:user] do
+  home node[:rails_app][:home]
+end
+
 directory "#{node[:rails_app][:home]}" do
   owner node[:rails_app][:user]
   action :create
   recursive true
-end
-
-user node[:rails_app][:user] do
-  home node[:rails_app][:home]
 end
 
 directory "#{node[:rails_app][:home]}/.ssh" do
