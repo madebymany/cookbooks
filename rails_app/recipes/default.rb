@@ -81,6 +81,13 @@ if node[:rails_app][:other_configs]
   end
 end
 
+if node[:rails_app][:htpasswd]
+  bash "create htpasswd file" do
+    code %{ htpasswd -b /etc/apache2/htpasswd #{node[:rails_app][:htpasswd][:username]} #{node[:rails_app][:htpasswd][:password]} }
+  not_if { File.exist?("/etc/apache2/htpasswd") }
+  end
+end
+
 bash "placate_apache" do
   user node[:rails_app][:user]
   code %{ ln -s #{ node[:rails_app][:home] }/releases #{ node[:rails_app][:home] }/current }
