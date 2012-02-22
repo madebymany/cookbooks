@@ -83,7 +83,7 @@ end
 
 if node[:rails_app][:htpasswd]
   bash "create htpasswd file" do
-    code %{ htpasswd -b /etc/apache2/htpasswd #{node[:rails_app][:htpasswd][:username]} #{node[:rails_app][:htpasswd][:password]} }
+    code %{ htpasswd -c -b /etc/apache2/htpasswd #{node[:rails_app][:htpasswd][:username]} #{node[:rails_app][:htpasswd][:password]} }
   not_if { File.exist?("/etc/apache2/htpasswd") }
   end
 end
