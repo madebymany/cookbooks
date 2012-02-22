@@ -41,19 +41,19 @@ case "$INSTALL_RUBY" in
   '1.9.3')
      case `uname -m` in
        x86_64)
-         RDEB="https://github.com/downloads/madebymany/packages/ruby-1.9.3-cp_amd64.deb"
+         RDEB="https://cloud.github.com/downloads/madebymany/packages/ruby-1.9.3-cp_amd64.deb"
          ;;
        *)
-         RDEB="https://github.com/downloads/madebymany/packages/ruby-1.9.3-cp_i386.deb"
+         RDEB="https://cloud.github.com/downloads/madebymany/packages/ruby-1.9.3-cp_i386.deb"
      esac
      ;;
    '1.9.2')
      case `uname -m` in
        x86_64)
-         RDEB="https://github.com/downloads/madebymany/packages/ruby-1.9.2-p290_amd64.deb"
+         RDEB="https://cloud.github.com/downloads/madebymany/packages/ruby-1.9.2-p290_amd64.deb"
          ;;
        *)
-         RDEB="https://github.com/downloads/madebymany/packages/ruby-1.9.2-p290_i386.deb"
+         RDEB="https://cloud.github.com/downloads/madebymany/packages/ruby-1.9.2-p290_i386.deb"
          ;;
      esac
      ;;
