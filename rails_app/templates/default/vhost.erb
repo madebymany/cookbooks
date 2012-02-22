@@ -20,7 +20,7 @@
     Order allow,deny
     Allow from all
 
-    <% if node[:htpasswd] %>
+    <% if node[:rails_app][:htpasswd] %>
     AuthName "Password required"
     AuthType Basic
     AuthUserFile /etc/apache2/htpasswd
