@@ -2,8 +2,6 @@ require 'digest/sha1'
 SOLR_VERSION = node[:solr][:version]
 JETTY_DIR = "#{node[:solr][:home_dir]}/#{node[:solr][:application]}/jettyapps"
 
-include_recipe "monit"
-
 group(node[:solr][:group]){ gid 365 }
 
 user node[:solr][:user] do
@@ -86,5 +84,6 @@ execute "install-sunspot-solr" do
   action :run
 end
   
+include_recipe "monit"
 monitrc "solr-monit", {:pidfile => "#{node[:solr][:pid_dir]}/${node[:solr][:application]}.pid", :appdir => JETTY_DIR}, :immediately
 
