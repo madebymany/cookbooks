@@ -88,9 +88,4 @@ end
   
   monitrc "solr-monit", {:pidfile => "#{node[:solr][:pid_dir]}/${node[:solr][:application]}.pid", :appdir => JETTY_DIR}, :immediately
 
-  execute "restart-monit-solr" do
-     command "/usr/bin/monit reload && " +
-             "/usr/bin/monit restart all -g solr_#{node[:solr][:application]}"
-     action :run
-  end
  
