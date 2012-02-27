@@ -20,10 +20,10 @@ if [ -d <%= @app_dir %>/solr ]; then
   case "$1" in
     start)
       echo "Starting the Solr server."
-      if [ -f /var/run/solr/$1.pid ]; then
-        PID=`cat /var/run/solr/$1.pid`
+      if [ -f <%= @pid_dir %>/<%= @app%>.pid ]; then
+        PID=`cat <%= @pid_dir %>/<%= @app%>.pid`
         if [ ! -d /proc/$PID ]; then
-          rm -f /var/run/solr/$1.pid
+          rm -f <%= @pid_dir %>/<%= @app%>.pid
         fi
       fi
  
