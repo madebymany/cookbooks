@@ -25,7 +25,15 @@
     AuthType Basic
     AuthUserFile /etc/apache2/htpasswd
     require valid-user
+
+      <% if node[:rails_app][:htpasswd][:allow] %>
+        <% node[:rails_app][:htpasswd][:allow].each do |url| %>
+          Allow from <%= url %>
+        <% end %>
+      <% end %>
     <% end %>
+
+
   </Directory>
 
   <Directory "<%= node[:rails_app][:home] %>/current/public/system">
