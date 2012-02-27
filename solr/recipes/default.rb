@@ -85,5 +85,5 @@ execute "install-sunspot-solr" do
 end
   
 include_recipe "monit"
-monitrc "solr-monit", {:pidfile => "#{node[:solr][:pid_dir]}/${node[:solr][:application]}.pid", :appdir => JETTY_DIR}, :immediately
+monitrc "solr-monit", {:pidfile => "#{node[:solr][:pid_dir]}/#{node[:solr][:application]}.pid", :appdir => JETTY_DIR}, :immediately
 
