@@ -1,58 +1,59 @@
 require 'digest/sha1'
-SOLR_VERSION = '1.4.1'
+SOLR_VERSION = node[:solr][:version]
+JETTY_DIR = "#{node[:solr][:home_dir]}/#{node[:solr][:application]}/jettyapps"
+
+include_recipe "install_from"
+include_recipe "monit"
+
+group(node[:solr][:group]){ gid 365 }
+user node[:solr][:user] do
+    comment   "solr runner"
+    uid       365
+    gid       node[:solr][:group]
+    shell     "/bin/false"
+end
  
-node[:applications].each do |app|
- 
-  directory "/data/#{app}/jettyapps" do
-    owner node[:rails_app][:user]
-    group node[:rails_app][:user]
+  directory JETTY_DIR do
+    owner node[:solr][:user]
+    group node[:solr][:group]
     mode 0755
     recursive true
   end
  
-  directory "/var/run/solr" do
-    owner node[:rails_app][:user]
-    group node[:rails_app][:user]
+  directory node[:solr][:pid_dir] do
+    owner node[:solr][:user]
+    group node[:solr][:group]
     mode 0755
     recursive true
   end
   
   
-  directory "/var/log/solr" do
-    owner node[:rails_app][:user]
-    group node[:rails_app][:user]
+  directory node[:solr][:log_dir] do
+    owner node[:solr][:user]
+    group node[:solr][:group]
     mode 0755
     recursive true
   end
  
  
-  template "/usr/bin/solr" do
+  template "/etc/init.d/solr" do
     source "solr.erb"
-    owner node[:rails_app][:user]
-    group node[:rails_app][:user]
+    owner node[:solr][:user]
+    group node[:solr][:group]
     mode 0755
     variables({
       :rails_env => 'production',
-      :app => app
+      :app_dir => JETTY_DIR,
+      :log_dir => node[:solr][:log_dir],
+      :pid_dir => node[:solr][:pid_dir],
+      :app => node[:solr][:application]
     })
   end
  
-  # template "/etc/monit.d/solr.#{app}.monitrc" do
-  #   source "solr.monitrc.erb"
-  #   owner node[:rails_app][:user]
-  #   group node[:rails_app][:user]
-  #   mode 0644
-  #   variables({
-  #     :app => app,
-  #     :user => node[:rails_app][:user],
-  #     :group => node[:rails_app][:user]
-  #   })
-  # end
- 
   execute "install solr example package" do
-    user node[:rails_app][:user]
-    group node[:rails_app][:user]
-    command("if [ ! -e /data/#{app}/jettyapps/solr ]; then cd /data/#{app}/jettyapps && " +
+    user node[:solr][:user]
+    group node[:solr][:gorup]
+    command("if [ ! -e #{JETTY_DIR} ]; then cd #{JETTY_DIR} && " +
             "wget -O apache-solr-#{SOLR_VERSION}.tgz http://mirror.cc.columbia.edu/pub/software/apache/lucene/solr/#{SOLR_VERSION}/apache-solr-#{SOLR_VERSION}.tgz && " +
             "tar -xzf apache-solr-#{SOLR_VERSION}.tgz && " +
             "mv apache-solr-#{SOLR_VERSION}/example solr && " +
@@ -79,16 +80,17 @@ node[:applications].each do |app|
   end
  
   execute "install-sunspot-solr" do
-    user node[:rails_app][:user]
-    group node[:rails_app][:user]
-    command "sunspot-installer -f /data/#{app}/jettyapps/solr/solr"
+    user node[:solr][:user]
+    group node[:solr][:group]
+    command "sunspot-installer -f #{JETTY_DIR}/solr/solr"
     action :run
   end
   
-  # execute "restart-monit-solr" do
-  #   command "/usr/bin/monit reload && " +
-  #           "/usr/bin/monit restart all -g solr_#{app}"
-  #   action :run
-  # end
+  monitrc "solr-monit", {:pidfile => "#{node[:solr][:pid_dir]}/${node[:solr][:application]}.pid", :appdir => JETTY_DIR}, :immediately
+
+  execute "restart-monit-solr" do
+     command "/usr/bin/monit reload && " +
+             "/usr/bin/monit restart all -g solr_#{node[:solr][:application]}"
+     action :run
+  end
  
-end

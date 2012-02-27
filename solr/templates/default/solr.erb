@@ -7,34 +7,33 @@ PATH=/bin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$PATH
 RAILS_ENV=<%= @rails_env %>; export RAILS_ENV
  
 usage() {
-  echo "Usage: $0 #{@app} {start, stop}"
+  echo "Usage: $0 {start, stop}"
   exit 1
 }
  
 if [ $# -lt 2 ]; then usage; fi
  
-if [ -d /data/$1/jettyapps/solr ]; then
-cd /data/$1/jettyapps/solr
-  mkdir -p /var/log/solr/$1
+if [ -d <%= @app_dir %>/solr ]; then
+  cd <%= @app_dir %>/solr
  
   # handle the second param, don't start if already existing
-  case "$2" in
+  case "$1" in
     start)
       echo "Starting the Solr server."
       if [ -f /var/run/solr/$1.pid ]; then
-PID=`cat /var/run/solr/$1.pid`
+        PID=`cat /var/run/solr/$1.pid`
         if [ ! -d /proc/$PID ]; then
-rm -f /var/run/solr/$1.pid
+          rm -f /var/run/solr/$1.pid
         fi
-fi
+      fi
  
-nohup java -Djava.net.preferIPv4Stack=true -Dsolr.solr.home=solr -jar start.jar >> /var/log/solr/$1.log 2>> /var/log/solr/$1.err.log &
-      echo $! > /var/run/solr/$1.pid
+      nohup java -Djava.net.preferIPv4Stack=true -Dsolr.solr.home=solr -jar start.jar >> <%= @log_dir%>/<%=@app%>.log 2>> <%= @log_dir %>/<$=@app%>.err.log &
+      echo $! > <%= @pid_dir %>/<%= @app%>.pid
       ;;
     stop)
       echo "Stopping the solr server."
-      if [ -f /var/run/solr/$1.pid ]; then
-kill -9 `cat /var/run/solr/$1.pid` 2>/dev/null; true
+      if [ -f <%= @pid_dir %>/<%= @app%>.pid ]; then
+      kill -9 `cat <%= @pid_dir %>/<%= @app%>.pid` 2>/dev/null; true
 fi
       ;;
     *)
@@ -42,6 +41,6 @@ fi
       ;;
         esac
 else
-echo "/data/$1/jettyapps/solr doesn't exist."
+echo "<%= @app_dir %>/solr doesn't exist."
   usage
 fi
