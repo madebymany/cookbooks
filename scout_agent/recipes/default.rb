@@ -43,7 +43,7 @@ if node[:scout_agent][:key]
   # schedule scout agent to run via cron
   cron "scout_run" do
     user node[:scout_agent][:user]
-    command "#{node[:scout_agent][:scout_bin]} #{node[:scout_agent][:key]}"
+    command "#{node[:scout_agent][:scout_bin]} #{node[:scout_agent][:key]} -d /home/#{node[:scout_agent][:user]}/.scout/client_data.yml"
     only_if do File.exist?("/usr/bin/scout") end
   end
 else
