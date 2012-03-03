@@ -20,19 +20,6 @@
     Order allow,deny
     Allow from all
 
-    <% if node[:rails_app][:htpasswd] %>
-    AuthName "Password required"
-    AuthType Basic
-    AuthUserFile /etc/apache2/htpasswd
-    require valid-user
-    <% end %>
-    <% if node[:rails_app][:access] %>
-      <% node[:rails_app][:access].each do |al| %>
-        <%= al[:directive] %> from <%= al[:source] %>
-      <% end %>
-    <% end %>
-
-
   </Directory>
 
   <Directory "<%= node[:rails_app][:home] %>/current/public/system">
@@ -65,7 +52,18 @@
 
   # Add any access limit directives here
   <Location />
-    Allow from all
+    <% if node[:rails_app][:htpasswd] %>
+    AuthName "Password required"
+    AuthType Basic
+    AuthUserFile /etc/apache2/htpasswd
+    require valid-user
+    <% end %>
+    <% if node[:rails_app][:access] %>
+      <%= node[:rails_app][:access][:order] %>
+      <% node[:rails_app][:access][:acl].each do |al| %>
+        <%= al[:directive] %> from <%= al[:source] %>
+      <% end unless node[:rails_app][:access][:acl].nil?%>
+    <% end %>
   </Location>
 
 </VirtualHost>
