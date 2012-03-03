@@ -50,6 +50,13 @@
   BrowserMatch ^Mozilla/4.0[678] no-gzip
   BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
 
+  <% if node[:rails_app][:setenvif] %>
+    <% node[:rails_app][:setenvif].each do |seif| %>
+      SetEnvIf <%= seif[:attribute] %> "<%= seif[:regex] %>" <%= seif[:env] %>
+    <% end %>
+  <% end %>
+
+
   # Add any access limit directives here
   <Location />
     <% if node[:rails_app][:htpasswd] %>
