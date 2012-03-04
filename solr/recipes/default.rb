@@ -84,6 +84,16 @@ execute "install-sunspot-solr" do
   action :run
 end
   
+template "#{JETTY_DIR}/solr/solr/conf/solrconfig.xml" do
+  source "solrconfig.xml.erb"
+  owner node[:solr][:user]
+  group node[:solr][:group]
+  mode 0755
+  variables({
+    :replication => node[:solr][:replication]
+  })
+end
+
 include_recipe "monit"
 monitrc "solr-monit", {:pidfile => "#{node[:solr][:pid_dir]}/#{node[:solr][:application]}.pid", :appdir => JETTY_DIR}, :immediately
 
