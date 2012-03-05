@@ -88,6 +88,23 @@ if node[:rails_app][:htpasswd]
   end
 end
 
+if node[:rails_app][:activemq]
+  if node[:rails_app][:activemq][:database] and node[:rails_app][:database]
+    old_db = node[:activemq][:database][:name]
+    node[:activemq][:database][:name] = node[:rails_app][:activemq][:database]
+    node[:activemq][:database][:host] = node[:rails_app][:database][:host]
+    node[:activemq][:database][:user] = 'activemq'
+    node[:activemq][:database][:password] = 'activemq'
+
+    execute "create activemq mysql db" do
+      command "/usr/bin/mysql -h #{node.rails_app.database.host} -u root -p#{node.rails_app.database.password} -e " +
+          "'CREATE DATABASE `#{node.activemq.database.name}`;" +
+          " GRANT ALL on `#{node.activemq.database.name}`.* TO activemq@\'%\' IDENTIFIED BY \'activemq\';'"
+      only_if { old_db != node.activemq.database.name }
+    end
+  end
+end
+
 bash "placate_apache" do
   user node[:rails_app][:user]
   code %{ ln -s #{ node[:rails_app][:home] }/releases #{ node[:rails_app][:home] }/current }

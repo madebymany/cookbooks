@@ -22,3 +22,8 @@ default['activemq']['version'] = "5.5.1"
 default['activemq']['home']  = "/opt"
 default['activemq']['wrapper']['max_memory'] = "512"
 default['activemq']['wrapper']['useDedicatedTaskRunner'] = "true"
+
+default['activemq']['database']['name'] = nil
+default['activemq']['database']['host'] = 'localhost'
+default['activemq']['database']['user'] = 'root'
+default['activemq']['database']['paswword'] = ''

@@ -64,6 +64,26 @@ link "/var/run/activemq.pid" do
   not_if "test -f /var/run/activemq.pid"
 end
 
+if node.activemq.database.name
+  package "libmysql-java"
+end
+link "#{activemq_home}/lib/optional/mysql-connector-java-5.1.10.jar" do
+  to "/usr/share/java/mysql-connector-java-5.1.10.jar"
+  action node.activemq.database.name ? :create : :delete
+end
+
+template "#{activemq_home}/conf/activemq-custom.xml" do
+  source "activemq-custom.xml.erb"
+  mode 0644
+  variables(
+    :database => node[:activemq][:database][:name],
+    :db_host => node[:activemq][:database][:host],
+    :db_user => node[:activemq][:database][:user],
+    :db_password => node[:activemq][:database][:password]
+  )
+  notifies :restart, 'service[activemq]'
+end
+
 template "#{activemq_home}/bin/linux/wrapper.conf" do
   source "wrapper.conf.erb"
   mode 0644
