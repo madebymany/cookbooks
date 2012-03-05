@@ -20,20 +20,6 @@
     Order allow,deny
     Allow from all
 
-    <% if node[:rails_app][:htpasswd] %>
-    AuthName "Password required"
-    AuthType Basic
-    AuthUserFile /etc/apache2/htpasswd
-    require valid-user
-
-      <% if node[:rails_app][:htpasswd][:allow] %>
-        <% node[:rails_app][:htpasswd][:allow].each do |url| %>
-          Allow from <%= url %>
-        <% end %>
-      <% end %>
-    <% end %>
-
-
   </Directory>
 
   <Directory "<%= node[:rails_app][:home] %>/current/public/system">
@@ -64,9 +50,27 @@
   BrowserMatch ^Mozilla/4.0[678] no-gzip
   BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
 
+  <% if node[:rails_app][:setenvif] %>
+    <% node[:rails_app][:setenvif].each do |seif| %>
+      SetEnvIf <%= seif[:attribute] %> "<%= seif[:regex] %>" <%= seif[:env] %>
+    <% end %>
+  <% end %>
+
+
   # Add any access limit directives here
   <Location />
-    Allow from all
+    <% if node[:rails_app][:htpasswd] %>
+    AuthName "Password required"
+    AuthType Basic
+    AuthUserFile /etc/apache2/htpasswd
+    require valid-user
+    <% end %>
+    <% if node[:rails_app][:access] %>
+      Order <%= node[:rails_app][:access][:order] %>
+      <% node[:rails_app][:access][:acl].each do |al| %>
+        <%= al[:directive] %> from <%= al[:source] %>
+      <% end unless node[:rails_app][:access][:acl].nil?%>
+    <% end %>
   </Location>
 
 </VirtualHost>
