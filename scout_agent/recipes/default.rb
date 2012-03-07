@@ -66,3 +66,5 @@ template "/etc/sudoers.d/scout" do
   owner "root"
   group "root"
 end
+
+include_recipe "scout_agent::activemq_plugin"
