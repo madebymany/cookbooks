@@ -50,14 +50,12 @@ else
   Chef::Log.info "Add a [:scout_agent][:key] attribute to configure this node's Scout Agent"
 end
 
-
-script "install_something" do
-    interpreter "bash"
-    user "root"
-    cwd "/tmp"
-    code <<-EOH
-    echo 'scout ALL=(root)NOPASSWD:/usr/bin/passenger-status' >> /etc/sudoers
-    EOH
+script "include sudoers.d" do
+  interpreter "bash"
+  user "root"
+  cwd "/tmp"
+  code "echo '#includedir /etc/sudoers.d' >> /etc/sudoers"
+  not_if "grep -E '^#includedir /etc/sudoers.d' /etc/sudoers"
 end
 
 template "/etc/sudoers.d/scout" do
