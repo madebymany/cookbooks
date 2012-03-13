@@ -1,0 +1,8 @@
+<%= node[:rails_app][:home] %>/shared/log/*.log {
+        daily
+        missingok
+        rotate 52
+        compress
+        delaycompress
+        copytruncate
+}

@@ -117,3 +117,8 @@ bash "reload_apache" do
   code "/etc/init.d/apache2 start"
   code "/etc/init.d/apache2 reload"
 end
+
+template "/etc/logrotate.d/rails_app" do
+  source "logrotate.erb"
+  mode "0644"
+end

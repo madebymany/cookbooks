@@ -1,0 +1,8 @@
+<%= node[:redis][:log_dir] %>/*.log {
+        daily
+        missingok
+        rotate 52
+        compress
+        delaycompress
+        copytruncate
+}
