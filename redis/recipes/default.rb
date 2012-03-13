@@ -45,3 +45,8 @@ template "#{node[:redis][:conf_dir]}/redis.conf" do
 end
 
 monitrc "redis-server", {:pidfile => node[:redis][:pid_file], :confdir => node[:redis][:conf_dir]}, :immediately
+
+template "/etc/logrotate.d/redis" do
+  source "logrotate.erb"
+  mode "0644"
+end
