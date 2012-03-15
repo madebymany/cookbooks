@@ -24,12 +24,19 @@
 
 include_recipe "passenger_apache2"
 
+template "/usr/bin/ruby_with_gc_tuning" do
+  source "ruby_wrapper.erb"
+  owner "root"
+  group "root"
+  mode 0755
+end
+
 template "#{node[:apache][:dir]}/mods-available/passenger.load" do
   cookbook "passenger_apache2"
   source "passenger.load.erb"
   owner "root"
   group "root"
-  mode 0755
+  mode 0644
 end
 
 template "#{node[:apache][:dir]}/mods-available/passenger.conf" do
@@ -37,7 +44,7 @@ template "#{node[:apache][:dir]}/mods-available/passenger.conf" do
   source "passenger.conf.erb"
   owner "root"
   group "root"
-  mode 0755
+  mode 0644
 end
 
 apache_module "passenger"
