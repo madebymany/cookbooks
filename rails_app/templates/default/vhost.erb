@@ -64,13 +64,16 @@
     AuthName "Password required"
     AuthType Basic
     AuthUserFile /etc/apache2/htpasswd
-    require valid-user
+    Require valid-user
     <% end %>
     <% if node[:rails_app][:access] %>
       Order <%= node[:rails_app][:access][:order] %>
       <% node[:rails_app][:access][:acl].each do |al| %>
         <%= al[:directive] %> from <%= al[:source] %>
       <% end unless node[:rails_app][:access][:acl].nil?%>
+      <% if node[:rails_app][:access][:satisfy] =~ /\Aany\z/i %>
+        Satisfy Any
+      <% end %>
     <% end %>
   </Location>
 
