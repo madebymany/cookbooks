@@ -5,6 +5,7 @@
   ServerAlias <%= a %>
   <% end %>
 
+  CustomLog <%= node[:apache][:log_dir] %>/access.log combined
   DocumentRoot <%= node[:rails_app][:home] %>/current/public
 
   RailsEnv production
