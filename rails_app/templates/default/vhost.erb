@@ -10,6 +10,10 @@
 
   RailsEnv production
 
+  <% node[:rails_app][:headers].each do |header| %>
+    Header <%= header %>
+  <% end %>
+
   <% node[:rails_app][:passenger].each do |setting, value| -%> 
     <%= "Passenger"+setting.gsub(/(^|_|\s+)([a-z])/){$2.upcase} %> <%= value %>
     <% end unless node[:rails_app][:passenger].nil? -%>
