@@ -42,14 +42,25 @@
   RewriteCond %{SCRIPT_FILENAME} !^/(system|stylesheets|images|javascripts)
   RewriteRule ^.*$ /system/maintenance.html [R=503,L]
 
-  # Rewrite (some) domains to canonical domain
   <% if node[:rails_app][:redirections] %>
+  # Rewrite (some) domains to canonical domain
     <% node[:rails_app][:redirections].each do |domain|
        pattern = domain.sub(/\$$/, "(:.*)?$").gsub(/\./, "\\\\.") %>
   RewriteCond %{HTTP_HOST} <%= pattern %> [NC]
   RewriteRule ^/(.*) http://<%= node[:rails_app][:canonical_domain] %>/$1 [R=301,L]
     <% end %>
   <% end %>
+
+  <%- if node[:rails_app][:rewrite_rules] -%>
+    <%- node[:rails_app][:rewrite_rules].each do |rule| -%>
+      <%- if rule[:conditions] -%>
+        <%- rule[:conditions].each do |cond| -%>
+  RewriteCond <%= cond[:test_string] || '%{REQUEST_URI}' %> <%= cond[:pattern] %> <%= cond[:flags] %>
+        <%- end -%>
+      <%- end -%>
+  RewriteRule <%= rule[:pattern] %> <%= rule[:substitution] %> <%= rule[:flags] %>
+    <%- end -%>
+  <%- end -%>
 
   # Deflate
   AddOutputFilterByType DEFLATE text/plain text/html text/css application/x-javascript text/xml application/xml application/xml+rss text/javascript
