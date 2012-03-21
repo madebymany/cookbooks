@@ -66,3 +66,4 @@ template "/etc/sudoers.d/scout" do
 end
 
 include_recipe "scout_agent::activemq_plugin"
+include_recipe "scout_agent::redis_plugin"
