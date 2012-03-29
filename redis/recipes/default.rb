@@ -44,7 +44,7 @@ template "#{node[:redis][:conf_dir]}/redis.conf" do
   group node[:redis][:group]
 end
 
-monitrc "redis-server", {:pidfile => node[:redis][:pid_file], :confdir => node[:redis][:conf_dir]}, :immediately
+monitrc "redis-server", {:pidfile => node[:redis][:pid_file], :confdir => node[:redis][:conf_dir]}, :immediately, 'redis-server.conf.erb'
 
 template "/etc/logrotate.d/redis" do
   source "logrotate.erb"
