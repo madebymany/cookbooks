@@ -3,13 +3,13 @@ class Chef
     # name        The name of the service.  Looks for a template named NAME.conf
     # variables   Hash of variables to pass to the template
     # reload      Reload monit so it notices the new service.  :delayed (default) or :immediately.
-    def monitrc(name, variables={}, reload = :delayed)
+    def monitrc(name, variables={}, reload = :delayed, template_source = "#{name}.conf.erb}")
       log "Making monitrc for: #{name}"
       template "/etc/monit/conf.d/#{name}.conf" do
         owner "root"
         group "root"
         mode 0644
-        source "#{name}.conf.erb"
+        source template_source
         variables variables
         notifies :restart, resources(:service => "monit"), reload
         action :create
