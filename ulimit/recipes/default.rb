@@ -1,4 +1,4 @@
-script "include sudoers.d" do
+script "add pam_limits" do
     interpreter "bash"
     user "root"
     cwd "/etc/pam.d"
