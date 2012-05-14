@@ -1,0 +1,1 @@
+A very simple cookbook that allows us to create a robots.txt file per environment to disable indexing in other environments than production and set the sitemap.xml file location (which will only ever be needed in production but at least helps testing
