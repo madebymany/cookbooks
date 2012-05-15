@@ -18,6 +18,7 @@ default.redis[:timeout] = 300
 default.redis[:databases] = 16
 
 # max memory in MB
+default.redis[:limit_memory] = false
 default.redis[:max_memory] = "250"
 
 #  db snapshots to disk
