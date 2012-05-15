@@ -31,8 +31,9 @@ dir <%= @node[:redis][:data_dir] %>
   maxclients <%= @node[:redis][:max_clients] %>
 <% end %>
 
-
+<% if @node[:redis][:limit_memory] %>
 maxmemory <%= @node[:redis][:max_memory].to_i * 1024 * 1024 %>
+<% end %>
 
 # advanced defaults from stock config
 appendonly no
