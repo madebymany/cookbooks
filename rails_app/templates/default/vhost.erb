@@ -88,10 +88,10 @@
 
   # Add any access limit directives here
   <Location />
-    <% if node[:rails_app][:htpasswd] %>
+    <% if @htpasswd_file %>
     AuthName "Password required"
     AuthType Basic
-    AuthUserFile /etc/apache2/htpasswd
+    AuthUserFile <%= @htpasswd_file %>
     Require valid-user
     <% end %>
     <% if node[:rails_app][:access] %>
