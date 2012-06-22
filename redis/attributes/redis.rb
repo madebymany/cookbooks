@@ -9,8 +9,8 @@ default[:redis][:home_dir]          = "/usr/local/share/redis"
 default[:redis][:pid_file]          = "/var/log/redis/redis.pid"
 
 default[:redis][:home_dir] = "/usr/local/share/redis"
-default[:redis][:version] = "2.4.7"
-default[:redis][:release_url] = "http://redis.googlecode.com/files/redis-2.4.7.tar.gz"
+default[:redis][:version] = "2.4.14"
+default[:redis][:release_url] = "http://redis.googlecode.com/files/redis-2.4.14.tar.gz"
 
 default.redis[:port] = 6379
 default.redis[:bind_address] = "0.0.0.0"
