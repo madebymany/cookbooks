@@ -75,7 +75,7 @@ dpkg -i rdeb.deb || croak
 rm rdeb.deb
 
 inform "Installing Chef"
-gem install -v '~> 0.10.4' chef --no-rdoc --no-ri || croak
+gem install -v '~> 0.10.12' chef --no-rdoc --no-ri || croak
 
 inform "Creating directory for Chef files"
 mkdir -p /etc/chef || croak
