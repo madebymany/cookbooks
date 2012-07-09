@@ -55,13 +55,13 @@ runit_service "elasticsearch" do
 end
 
 # TODO: split httpnode and datanode into separate components
-#announce(:elasticsearch, :datanode)
-#announce(:elasticsearch, :httpnode)
+announce(:elasticsearch, :datanode)
+announce(:elasticsearch, :httpnode)
 
 # Tell ElasticSearch where to find its other nodes
-#if node[:elasticsearch][:seeds].nil?
-#  es_servers = discover_all(:elasticsearch, :datanode)
-#
+if node[:elasticsearch][:seeds].nil?
+  es_servers = discover_all(:elasticsearch, :datanode)
+
   # FIXME: use the port from the component
-#  node[:elasticsearch][:seeds] = es_servers.map{|svr| "#{svr.private_ip}:#{node[:elasticsearch][:api_port] }" }
-#end
+  node[:elasticsearch][:seeds] = es_servers.map{|svr| "#{svr.private_ip}:#{node[:elasticsearch][:api_port] }" }
+end
