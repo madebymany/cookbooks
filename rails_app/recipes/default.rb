@@ -2,6 +2,7 @@ include_recipe "apache2"
 include_recipe "apache2::mod_headers"
 include_recipe "apache2::mod_rewrite"
 include_recipe "passenger_apache2::mod_rails"
+include_recipe "monit"
 
 gem_package "bundler" do
   version "1.0.22"
@@ -138,4 +139,14 @@ end
 template "/etc/logrotate.d/rails_app" do
   source "logrotate.erb"
   mode "0644"
+end
+
+if node[:rails_app][:zombie_passenger_killer]
+  gem_package "zombie_passenger_killer" do
+    action :install
+  end
+
+  monitrc "zombie-killer", {:conf => node[:rails_app][:zombie_passenger_killer]}, :immediately, 'zombie-killer.conf.erb'
+
+
 end
