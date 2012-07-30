@@ -141,6 +141,11 @@ template "/etc/logrotate.d/rails_app" do
   mode "0644"
 end
 
+template "/etc/logrotate.d/apache2" do
+  source "apache-logrotate.erb"
+  mode "0644"
+end
+
 if node[:rails_app][:zombie_passenger_killer]
   gem_package "zombie_passenger_killer" do
     action :install
