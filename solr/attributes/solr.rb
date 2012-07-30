@@ -8,5 +8,5 @@ default[:solr][:data_dir]          = "/var/lib/solr"
 default[:solr][:home_dir]          = "/usr/local/share/solr"
 default[:solr][:pid_dir]           = "/var/run/solr"
 
-default[:solr][:version] = "3.6.1"
+default[:solr][:version] = "1.4.1"
 

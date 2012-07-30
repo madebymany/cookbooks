@@ -52,7 +52,7 @@ execute "install solr example package" do
   user node[:solr][:user]
   group node[:solr][:group]
   command("if [ ! -e #{JETTY_DIR}/solr ]; then cd #{JETTY_DIR} && " +
-          "wget -O apache-solr-#{SOLR_VERSION}.tgz http://mirror.cc.columbia.edu/pub/software/apache/lucene/solr/#{SOLR_VERSION}/apache-solr-#{SOLR_VERSION}.tgz && " +
+          "wget -O apache-solr-#{SOLR_VERSION}.tgz http://archive.apache.org/dist/lucene/solr/#{SOLR_VERSION}/apache-solr-#{SOLR_VERSION}.tgz && " +
           "tar -xzf apache-solr-#{SOLR_VERSION}.tgz && " +
           "mv apache-solr-#{SOLR_VERSION}/example solr && " +
           "rm -rf apache-solr-#{SOLR_VERSION}; fi")
