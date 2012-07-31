@@ -37,9 +37,8 @@ end
 
 syslogdir = "/etc/rsyslog.d"
 
+watch_file_array = []
 if node[:papertrail][:watch_files] && node[:papertrail][:watch_files].length > 0
-
-  watch_file_array = []
 
   if node[:papertrail][:watch_files].respond_to?(:keys)
 
@@ -66,14 +65,6 @@ if node[:papertrail][:watch_files] && node[:papertrail][:watch_files].length > 0
 
   end
 
-  template "#{syslogdir}/60-watch-files.conf" do
-    source "watch-files.conf.erb"
-    owner "root"
-    group "root"
-    mode "0644"
-    variables(:watch_files => watch_file_array)
-    notifies :restart, resources(:service => syslogger)
-  end
 end
 
 hostname_name = node[:papertrail][:hostname_name].to_s
@@ -106,7 +97,8 @@ template "#{syslogdir}/65-papertrail.conf" do
   variables({ :cert_file => node[:papertrail][:cert_file],
               :host => node[:papertrail][:remote_host],
               :port => node[:papertrail][:remote_port],
-              :fixhostname => node[:papertrail][:fixhostname]
+              :fixhostname => node[:papertrail][:fixhostname],
+              :watch_files => watch_file_array
             })
   notifies  :restart, resources(:service => syslogger)
 end
