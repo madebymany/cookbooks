@@ -1,6 +1,22 @@
 # Push system log to papertrailapp.com
 #
 
+$ModLoad imfile
+$RuleSet papertrail
+$InputFileBindRuleset papertrail
+
+<%- @watch_files.each_with_index do |wf, idx| %>
+
+# File 1
+$InputFileName <%= wf[:filename] %>
+$InputFileTag <%= wf[:tag] %>
+$InputFileStateFile state_file_<%= wf[:sha] || idx %>
+#$InputFileSeverity error
+#$InputFileFacility local7
+$InputRunFileMonitor
+$InputFilePollInterval 10
+
+<%- end %>
 $DefaultNetstreamDriverCAFile <%= @cert_file %> # trust these CAs
 $DefaultNetstreamDriver gtls # use gtls netstream driver
 $ActionSendStreamDriverMode 1 # require TLS
@@ -15,3 +31,8 @@ $ActionSendStreamDriverAuthMode x509/name # authenticate by hostname
 *.*   @@<%= @host %>:<%= @port %>
 
 <%- end %>
+# for clarity, explicitly discard everything (this is typically not necessary)
+*.* ~
+
+# # all done. change to default ruleset (RSYSLOG_DefaultRuleset) for any following config
+$RuleSet RSYSLOG_DefaultRuleset
