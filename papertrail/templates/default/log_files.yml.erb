@@ -1,0 +1,8 @@
+files:
+<%- @watch_files.each do |wf| %>
+ - <%= wf %>
+<%-end%>
+destination:
+ host: <%= @host %>
+ port: <%= @port %> 
+ssl_server_cert: <%= @ssl_server_cert %>
