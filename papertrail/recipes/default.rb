@@ -31,7 +31,7 @@ template "/etc/init.d/remote_syslog" do
   source "remote_syslog.init.erb"
   owner "root"
   group "root"
-  mode "0644"
+  mode "0744"
 end
 
 monitrc "remote_syslog", {}, :immediately, 'remote_syslog.monit.erb'
