@@ -1,0 +1,4 @@
+check process remote_syslog
+  with pidfile /var/run/remote_syslog.pid
+  start program = "/etc/init.d/remote_syslog start"
+  stop program = "/etc/init.d/remote_syslog stop"
