@@ -1,6 +1,7 @@
 return unless node[:papertrail][:logger] == "rsyslog"
 
 syslogger = "rsyslog"
+syslogdir = "/etc/rsyslog.d"
 
 include_recipe "rsyslog"
 include_recipe "monit"
