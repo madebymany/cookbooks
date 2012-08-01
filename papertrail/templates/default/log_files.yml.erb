@@ -1,6 +1,6 @@
 files:
 <%- @watch_files.each do |wf| %>
- - <%= wf %>
+ - <%= wf[0] %>
 <%-end%>
 destination:
  host: <%= @host %>
