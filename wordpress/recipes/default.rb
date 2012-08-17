@@ -23,22 +23,44 @@ include_recipe "php"
 include_recipe "php::module_mysql"
 include_recipe "apache2::mod_php5"
 
+# Make sure the mysql gem is installed. This looks like it will change with 
+# the release of 0.10.10 and the inclusion of the new chef_gem. 
+# code curtesy @hectcastro
+# http://tickets.opscode.com/browse/COOK-1009
+gem_package "mysql" do
+  action :install
+end
+
 if node.has_key?("ec2")
   server_fqdn = node['ec2']['public_hostname']
 else
   server_fqdn = node['fqdn']
 end
 
-node.set['wordpress']['db']['password'] = secure_password
-node.set['wordpress']['keys']['auth'] = secure_password
-node.set['wordpress']['keys']['secure_auth'] = secure_password
-node.set['wordpress']['keys']['logged_in'] = secure_password
-node.set['wordpress']['keys']['nonce'] = secure_password
+node.set_unless['wordpress']['db']['password'] = secure_password
+node.set_unless['wordpress']['keys']['auth'] = secure_password
+node.set_unless['wordpress']['keys']['secure_auth'] = secure_password
+node.set_unless['wordpress']['keys']['logged_in'] = secure_password
+node.set_unless['wordpress']['keys']['nonce'] = secure_password
 
-remote_file "#{Chef::Config[:file_cache_path]}/wordpress-#{node['wordpress']['version']}.tar.gz" do
-  checksum node['wordpress']['checksum']
-  source "http://wordpress.org/wordpress-#{node['wordpress']['version']}.tar.gz"
-  mode "0644"
+
+if node['wordpress']['version'] == 'latest'
+  # WordPress.org does not provide a sha256 checksum, so we'll use the sha1 they do provide
+  require 'digest/sha1'
+  require 'open-uri'
+  local_file = "#{Chef::Config[:file_cache_path]}/wordpress-latest.tar.gz"
+  latest_sha1 = open('http://wordpress.org/latest.tar.gz.sha1') {|f| f.read }
+  unless File.exists?(local_file) && ( Digest::SHA1.hexdigest(File.read(local_file)) == latest_sha1 )
+    remote_file "#{Chef::Config[:file_cache_path]}/wordpress-latest.tar.gz" do
+      source "http://wordpress.org/latest.tar.gz"
+      mode "0644"
+    end
+  end
+else
+  remote_file "#{Chef::Config[:file_cache_path]}/wordpress-#{node['wordpress']['version']}.tar.gz" do
+    source "http://wordpress.org/wordpress-#{node['wordpress']['version']}.tar.gz"
+    mode "0644"
+  end
 end
 
 directory "#{node['wordpress']['dir']}" do
@@ -56,7 +78,7 @@ execute "untar-wordpress" do
 end
 
 execute "mysql-install-wp-privileges" do
-  command "/usr/bin/mysql -u root -p#{node['mysql']['server_root_password']} < #{node['mysql']['conf_dir']}/wp-grants.sql"
+  command "/usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" < #{node['mysql']['conf_dir']}/wp-grants.sql"
   action :nothing
 end
 
@@ -74,21 +96,26 @@ template "#{node['mysql']['conf_dir']}/wp-grants.sql" do
 end
 
 execute "create #{node['wordpress']['db']['database']} database" do
-  command "/usr/bin/mysqladmin -u root -p#{node['mysql']['server_root_password']} create #{node['wordpress']['db']['database']}"
+  command "/usr/bin/mysqladmin -u root -p\"#{node['mysql']['server_root_password']}\" create #{node['wordpress']['db']['database']}"
   not_if do
+    # Make sure gem is detected if it was just installed earlier in this recipe
+    require 'rubygems'
+    Gem.clear_paths
     require 'mysql'
     m = Mysql.new("localhost", "root", node['mysql']['server_root_password'])
     m.list_dbs.include?(node['wordpress']['db']['database'])
   end
-  notifies :create, "ruby_block[save node data]", :immediately
+  notifies :create, "ruby_block[save node data]", :immediately unless Chef::Config[:solo]
 end
 
 # save node data after writing the MYSQL root password, so that a failed chef-client run that gets this far doesn't cause an unknown password to get applied to the box without being saved in the node data.
-ruby_block "save node data" do
-  block do
-    # node.save
+unless Chef::Config[:solo]
+  ruby_block "save node data" do
+    block do
+      node.save
+    end
+    action :create
   end
-  action :create
 end
 
 log "Navigate to 'http://#{server_fqdn}/wp-admin/install.php' to complete wordpress installation" do
@@ -120,5 +147,5 @@ web_app "wordpress" do
   template "wordpress.conf.erb"
   docroot "#{node['wordpress']['dir']}"
   server_name server_fqdn
-  server_aliases node['fqdn']
+  server_aliases node['wordpress']['server_aliases']
 end
