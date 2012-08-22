@@ -32,7 +32,11 @@ set mail-format {
   message: <%= @node[:monit][:mail_format][:message] %>
 }
 
-set alert <%= @node[:monit][:notify_email] %> NOT ON { action, instance, pid, ppid }
+<% (@node[:monit][:notify_email].is_a?(Array) ?
+    @node[:monit][:notify_email] :
+    [@node[:monit][:notify_email]]).each do |a| -%>
+set alert <%= a %> NOT ON { instance, pid, ppid }
+<% end -%>
 
 set httpd port 3737 and
     use address localhost
