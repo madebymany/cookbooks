@@ -1,3 +1,5 @@
+default[:monit][:mailserver][:host] = "localhost"
+
 default[:monit][:notify_email]          = "notify@example.com"
 
 default[:monit][:poll_period]           = 60
