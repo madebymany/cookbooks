@@ -1,7 +1,7 @@
 include_recipe "monit"
 
 gem_package "nephelae" do
-  action :install
+  action :upgrade
 end
 
 template node[:nephelae][:conf_file] do
