@@ -1,4 +1,4 @@
 check process nephelae
   with pidfile <%= @piddir %>/nephelae.pid
-  start program = "nephelae start --piddir <%= @piddir%> --config <%= @conffile %> --logdir <%= @logdir %> --loglevel <%= @loglevel%>"
-  stop program = "nephelae stop --piddir <%= @piddir%> --config <%= @conffile %> --logdir <%= @logdir %> --loglevel <%= @loglevel%>"
+  start program = "/usr/bin/nephelae start --piddir <%= @piddir%> --config <%= @conffile %> --logdir <%= @logdir %> --loglevel <%= @loglevel%>"
+  stop program = "/usr/bin/nephelae stop --piddir <%= @piddir%> --config <%= @conffile %> --logdir <%= @logdir %> --loglevel <%= @loglevel%>"
