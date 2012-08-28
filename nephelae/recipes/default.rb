@@ -6,7 +6,7 @@ end
 
 template node[:nephelae][:conf_file] do
   source "nephelae.yml.erb"
-  variables( :config => fix_mash_to_hash(node[:nephelae][:config]) )
+  variables( :config => fix_mash_to_hash(node[:nephelae][:config], true) )
 end
 
 monitrc "nephelae", {:piddir => node[:nephelae][:pid_dir], 
