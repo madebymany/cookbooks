@@ -1,0 +1,9 @@
+<%= node[:nephelae][:log_dir] %>/nephelae.output {
+        daily
+        missingok
+        rotate 52
+        compress
+        maxage 14
+        delaycompress
+        copytruncate
+}
