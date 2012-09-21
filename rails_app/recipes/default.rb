@@ -5,7 +5,7 @@ include_recipe "passenger_apache2::mod_rails"
 include_recipe "monit"
 
 gem_package "bundler" do
-  version "1.0.22"
+  version "1.2.1"
   action :install
 end
 
