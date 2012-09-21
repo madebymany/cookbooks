@@ -44,6 +44,8 @@ bash "install nodejs from source" do
   code <<-EOH
     set -e
     git clean -xfq
+    git pull origin master
+    git fetch --tags
     git checkout v#{node[:nodejs][:version]}
     ./configure --prefix=#{node[:nodejs][:dir]}
     make install
