@@ -27,15 +27,25 @@ case node[:platform]
     package "libssl-dev"
 end
 
-bash "install nodejs from source" do
+package "git-core"
+
+bash "checkout nodejs" do
   cwd "/usr/local/src"
   user "root"
   code <<-EOH
-    wget http://nodejs.org/dist/node-v#{node[:nodejs][:version]}.tar.gz && \
-    tar zxf node-v#{node[:nodejs][:version]}.tar.gz && \
-    cd node-v#{node[:nodejs][:version]} && \
-    ./configure --prefix=#{node[:nodejs][:dir]} && \
-    make && \
+    git clone git://github.com/joyent/node.git
+  EOH
+  not_if "test -d /usr/local/src/node"
+end
+
+bash "install nodejs from source" do
+  cwd "/usr/local/src/node"
+  user "root"
+  code <<-EOH
+    set -e
+    git clean -xfq
+    git checkout v#{node[:nodejs][:version]}
+    ./configure --prefix=#{node[:nodejs][:dir]}
     make install
   EOH
   not_if "#{node[:nodejs][:dir]}/bin/node -v 2>&1 | grep 'v#{node[:nodejs][:version]}'"
