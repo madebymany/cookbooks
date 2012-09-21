@@ -44,6 +44,7 @@ bash "install nodejs from source" do
   code <<-EOH
     set -e
     git clean -xfq
+    git reset --hard
     git pull origin master
     git fetch --tags
     git checkout v#{node[:nodejs][:version]}
