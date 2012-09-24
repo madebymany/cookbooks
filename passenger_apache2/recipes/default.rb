@@ -23,24 +23,29 @@
 # limitations under the License.
 
 include_recipe "apache2"
-include_recipe "build-essential"
 
-if platform?("centos","redhat")
-  package "httpd-devel"
-  package "curl-devel"
+if node[:passenger][:from_system]
+  package "libapache2-mod-passenger"
 else
-  %w{ apache2-prefork-dev libapr1-dev libcurl4-openssl-dev }.each do |pkg|
-    package pkg do
-      action :upgrade
+  include_recipe "build-essential"
+
+  if platform?("centos","redhat")
+    package "httpd-devel"
+    package "curl-devel"
+  else
+    %w{ apache2-prefork-dev libapr1-dev libcurl4-openssl-dev }.each do |pkg|
+      package pkg do
+        action :upgrade
+      end
     end
   end
-end
 
-gem_package "passenger" do
-  version node[:passenger][:version]
-end
+  gem_package "passenger" do
+    version node[:passenger][:version]
+  end
 
-execute "passenger_module" do
-  command "passenger-install-apache2-module -a"
-  creates node[:passenger][:module_path]
+  execute "passenger_module" do
+    command "passenger-install-apache2-module -a"
+    creates node[:passenger][:module_path]
+  end
 end
