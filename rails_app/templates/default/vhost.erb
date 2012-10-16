@@ -1,7 +1,7 @@
 <VirtualHost *:80>
 
   ServerName <%= node[:rails_app][:canonical_domain] %>
-  <% node[:rails_app][:domain_aliases].each do |a| %>
+  <% (node[:rails_app][:domain_aliases] || []).each do |a| %>
   ServerAlias <%= a %>
   <% end %>
 

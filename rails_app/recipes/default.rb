@@ -1,11 +1,12 @@
 include_recipe "apache2"
 include_recipe "apache2::mod_headers"
 include_recipe "apache2::mod_rewrite"
-include_recipe "passenger_apache2::mod_rails"
+include_recipe(node[:rails_app][:passenger_recipe] ||
+               "passenger_apache2::mod_rails")
 include_recipe "monit"
 
 gem_package "bundler" do
-  version "1.0.22"
+  version "1.2.1"
   action :install
 end
 
