@@ -39,14 +39,4 @@ install_from_release('redis') do
     not_if{ File.exists?("#{node[:redis][:home_dir]}-#{node[:redis][:version]}") }
 end
 
-template "#{node[:redis][:conf_dir]}/redis.conf" do
-  owner node[:redis][:user]
-  group node[:redis][:group]
-end
-
-monitrc "redis-server", {:pidfile => node[:redis][:pid_file], :confdir => node[:redis][:conf_dir]}, :immediately, 'redis-server.conf.erb'
-
-template "/etc/logrotate.d/redis" do
-  source "logrotate.erb"
-  mode "0644"
-end
+include_recipe 'redis::config'
