@@ -33,9 +33,15 @@ default['elasticsearch']['servicewrapper_download'] = "#{node['elasticsearch']['
 default['elasticsearch']['servicewrapper_checksum'] = "8d2f46993dec203e23bbb5d16b90898a15761c7906feb466436858c91ae93c31"
 
 # SERVER PLUGINS
-default['elasticsearch']['plugins'] = "lukas-vlcek/bigdesk, Aconex/elasticsearch-head"
+default['elasticsearch']['plugins'] = ["lukas-vlcek/bigdesk",
+                                       "Aconex/elasticsearch-head",
+                                       {
+                                         "name" => "cloud-aws",
+                                         "url" => "https://github.com/downloads/elasticsearch/elasticsearch-cloud-aws/elasticsearch-cloud-aws-1.9.0.zip"
+                                       }]
 
 # SERVER CONFIG
+default['elasticsearch']['server_versions_path'] = "/usr/share"
 default['elasticsearch']['server_path'] = "/usr/share/elasticsearch"
 default['elasticsearch']['server_etc'] = "/etc/elasticsearch"
 default['elasticsearch']['server_pid'] = "/var/run/elasticsearch"
@@ -52,8 +58,10 @@ default['elasticsearch']['number_replicas'] = 1
 default['elasticsearch']['bind_host'] = "0.0.0.0"
 default['elasticsearch']['publish_host'] = nil
 default['elasticsearch']['port_tcp'] = nil
-default['elasticsearch']['port_http'] = nil
+default['elasticsearch']['port_http'] = 9200
 default['elasticsearch']['http_disable'] = false
 default['elasticsearch']['mem_mlock'] = true
 default['elasticsearch']['mem_heap'] = "#{(node['memory']['total'].to_i - (node['memory']['total'].to_i/3) ) / 1024}m"
 
+default['elasticsearch']['update_config_files'] = true
+default['elasticsearch']['install_servicewrapper'] = true
