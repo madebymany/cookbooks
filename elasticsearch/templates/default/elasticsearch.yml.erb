@@ -106,6 +106,16 @@ gateway:
   s3:
     bucket: <%= node['elasticsearch']['s3_bucket'] %>
   <% end %>
+
+  <% if node.elasticsearch.discovery_type == 'ec2' %>
+discovery:
+  type: ec2
+  ec2:
+    tag:
+    <%- node.elasticsearch.ec2_tag_filters.each do |name, value| %>
+      <%= name %>: <%= value %>
+    <%- end %>
+  <% end %>
 <% end %>
 
 ############################# Recovery Throttling #############################
