@@ -1,0 +1,20 @@
+<% pidfile = File.join(node['elasticsearch']['server_pid'],
+                       "elasticsearch.pid") -%>
+<% config = File.join(node['elasticsearch']['server_etc'],
+                     "elasticsearch.yml") %>
+check process elasticsearch with pidfile <%= pidfile %>
+  start program = "<%= File.join(node['elasticsearch']['server_path'], 'bin/elasticsearch') %> -Des.config=<%= config %> -p <%= pidfile %>"
+    as uid <%= node['elasticsearch']['server_user'] %> and gid <%= node['elasticsearch']['server_group'] %> 
+    with timeout 60 seconds
+  stop program = "/sbin/start-stop-daemon --stop --retry 5 --quiet --pidfile <%= pidfile %>"
+    as uid <%= node['elasticsearch']['server_user'] %> and gid <%= node['elasticsearch']['server_group'] %> 
+  if failed host 127.0.0.1 port <%= node['elasticsearch']['port_http'] %> protocol http
+    and request '/'
+    with timeout 3 seconds for 2 cycles
+  then restart
+  if cpu > 90% for 5 cycles then restart
+  if totalmem > 2 GB for 5 cycles then restart
+  if loadavg(5min) greater than 10 for 8 cycles then stop
+  if 3 restarts within 5 cycles then timeout
+  group elasticsearch
+
