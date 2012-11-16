@@ -25,12 +25,15 @@ template "/etc/monit/monitrc" do
   notifies :restart, resources(:service => "monit"), :immediate
 end
 
-template "/etc/monit/monit_delay" do
-  owner "root"
-  group "root"
-  mode 0700
-  source 'monit_delay.erb'
-  notifies :restart, resources(:service => "monit"), :immediate
+# We set the delay in the config now
+file "/etc/monit/monit_delay" do
+  action :delete
 end
-
+# template "/etc/monit/monit_delay" do
+  # owner "root"
+  # group "root"
+  # mode 0700
+  # source 'monit_delay.erb'
+  # notifies :restart, resources(:service => "monit"), :immediate
+# end
 
