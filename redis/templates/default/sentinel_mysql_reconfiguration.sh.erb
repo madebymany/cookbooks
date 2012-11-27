@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -e
+
+master_name=$1
+role=$2
+state=$3
+from_ip=$4
+from_port=$5
+to_ip=$6
+to_port=$7
+
+to_host=$(dig -x $to_ip +short)
+
+mysql -h <%= node.redis_sentinel.mysql_reconfiguration.host -%>
+  <% if node.redis_sentinel.mysql_reconfiguration[:port] -%>
+    -P <%= node.redis_sentinel.mysql_reconfiguration.port -%>
+  <% end -%>
+  -u <%= node.redis_sentinel.mysql_reconfiguration.username -%> 
+  <% if node.redis_sentinel.mysql_reconfiguration[:password] -%>
+    "-p<%= node.redis_sentinel.mysql_reconfiguration.password %>" <% end %> \
+  -e "START TRANSACTION; INSERT INTO config (id, value) VALUES ('redis_host', '${to_host}') ON DUPLICATE KEY UPDATE value = VALUES(value); INSERT INTO config (id, value) VALUES ('redis_port', '${to_port}') ON DUPLICATE KEY UPDATE value = VALUES(value); COMMIT;" <%= node.redis_sentinel.mysql_reconfiguration.database %>

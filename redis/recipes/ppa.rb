@@ -22,3 +22,4 @@ node[:redis][:home_dir] = "/var/log/redis"
 node[:redis][:pid_file] = "/var/run/redis/redis.pid"
 
 include_recipe 'redis::config'
+include_recipe 'redis::server_monit'
