@@ -1,0 +1,8 @@
+check process redis-sentinel
+  with pidfile <%= @pidfile %>
+  start program = "/usr/local/bin/redis-server <%= File.join(@confdir, "sentinel.conf") %> --sentinel"
+    as uid redis and gid redis
+  stop program = "/sbin/start-stop-daemon --stop --retry 5 --quiet --pidfile <%= @pidfile %>"
+  if failed host 127.0.0.1 port <%= node.redis_sentinel.port %> then restart
+  if 5 restarts within 5 cycles then timeout
+

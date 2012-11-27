@@ -1,6 +1,6 @@
 check process redis
   with pidfile <%= @pidfile %>
-  start program = "/bin/sh -c 'exec `/usr/bin/which redis-server` <%= @confdir %>/redis.conf'"
+  start program = "/bin/sh -c 'exec `/usr/bin/which redis-server` <%= File.join(@confdir, 'redis.conf') %>'"
     as uid redis and gid redis
   stop program = "/sbin/start-stop-daemon --stop --retry 5 --quiet --pidfile <%= @pidfile %>"
   if failed host 127.0.0.1 port 6379 then restart

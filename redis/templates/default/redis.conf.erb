@@ -1,11 +1,13 @@
-daemonize yes
-pidfile <%= @node[:redis][:pid_file] %>
-port <%= @node[:redis][:port] %>
-bind <%= @node[:redis][:bind_address] %>
-timeout <%= @node[:redis][:timeout ] %> 
-loglevel notice
-logfile <%= @node[:redis][:log_dir] %>/redis-server.log
+<% if node.redis.port -%>
+  port <%= @node[:redis][:port] %>
+<% end -%>
+<% if node.redis.bind_address -%>
+  bind <%= @node[:redis][:bind_address] %>
+<% end -%>
+timeout <%= @node[:redis][:timeout] %> 
 databases <%= @node[:redis][:databases] %>
+logfile <%= @node[:redis][:log_dir] %>/redis-server.log
+pidfile <%= @node[:redis][:pid_file] %>
 
 <% @node[:redis][:snapshots].each do |interval, keys| %>
   save <%= interval %> <%= keys %>
@@ -38,3 +40,5 @@ maxmemory <%= @node[:redis][:max_memory].to_i * 1024 * 1024 %>
 # advanced defaults from stock config
 appendonly no
 appendfsync always
+
+include <%= File.join(node.redis.conf_dir, 'common.conf') %>

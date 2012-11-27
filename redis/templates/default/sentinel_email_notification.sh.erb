@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -e
+
+echo "From: Redis Sentinel <<%= node.redis_sentinel.email_notifications.from_address %>>
+To: <%= node.redis_sentinel.email_notifications.to_addresses.join(', ') %>
+Subject: Redis Sentinel event: $1
+
+$1 : $2
+
+love, Redis Sentinel @ $(hostname -f)
+" | sendmail -t -i -f "<%= node.redis_sentinel.email_notifications.from_address %>"
