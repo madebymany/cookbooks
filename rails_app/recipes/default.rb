@@ -70,6 +70,7 @@ end
   shared/log
   shared/system
   shared/public
+  shared/pids
 ].each do |path|
   directory "#{node[:rails_app][:home]}/#{path}" do
     owner node[:rails_app][:user]
