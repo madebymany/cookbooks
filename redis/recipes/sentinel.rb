@@ -7,7 +7,7 @@ bash "install redis-sentinel" do
     set -e
     git clone git://github.com/antirez/redis.git redis-unstable
     cd redis-unstable
-    git checkout 95f68f7b0fc4ffc700361484b6c792a8e03f3a13
+    git checkout bf0852e5ed56dfbe32e19d926f8d5cc76f750cc8
     make install
   END
   not_if "which redis-server"
