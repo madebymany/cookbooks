@@ -6,7 +6,10 @@ pidfile <%= node.redis_sentinel.pid_file %>
 
 <% node.redis_sentinel.masters.each do |master_name, master_params| -%>
   <% master_params = node.redis_sentinel.master_defaults.merge(master_params) -%>
-  <% master_params.each do |name, value| -%>
+  <% master_params.sort { |a, b|
+    # Ensure the 'monitor' property comes first
+    a[0].to_s == 'monitor' ? -1 : b[0].to_s == 'monitor' ? 1 : 0
+  }.each do |name, value| -%>
 sentinel <%= name %> <%= master_name %> <%= value.is_a?(Array) ? value.map(&:to_s).join(' ') : value.to_s %>
   <% end -%>
 <% end -%>
