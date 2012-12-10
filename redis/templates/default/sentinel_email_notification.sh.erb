@@ -4,7 +4,9 @@ set -e
 
 echo "From: Redis Sentinel <<%= node.redis_sentinel.email_notifications.from_address %>>
 To: <%= node.redis_sentinel.email_notifications.to_addresses.join(', ') %>
-Subject: Redis Sentinel event: $1
+Subject: Redis Sentinel event<%=
+" [%s]" % [node.redis_sentinel.email_notifications[:subject_id]] \
+  if node.redis_sentinel.email_notifications[:subject_id] %>: $1
 
 $1 : $2
 
