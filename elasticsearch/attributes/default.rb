@@ -20,9 +20,9 @@
 
 # SERVER BINARY
 default['elasticsearch']['server_version'] = "0.19.11"
-default['elasticsearch']['server_url'] = "https://github.com/downloads/elasticsearch"
+default['elasticsearch']['server_url'] = "https://download.elasticsearch.org/elasticsearch/elasticsearch"
 default['elasticsearch']['server_file'] = "elasticsearch-#{node['elasticsearch']['server_version']}.tar.gz"
-default['elasticsearch']['server_download'] = "#{node['elasticsearch']['server_url']}/elasticsearch/#{node['elasticsearch']['server_file']}"
+default['elasticsearch']['server_download'] = "#{node['elasticsearch']['server_url']}/#{node['elasticsearch']['server_file']}"
 default['elasticsearch']['server_checksum'] = "214096db24e90b429e667b0ec23c9f97426bdf2f46d1105dcbf3334468984b1c"
 
 # SERVICE-WRAPPER BINARY
