@@ -82,7 +82,7 @@ fi
 
 
 inform "Installing Chef"
-gem install -v '~> 10.12.0' chef --no-rdoc --no-ri || croak
+gem install -v '~> 10.18.2' chef --no-rdoc --no-ri || croak
 
 inform "Creating directory for Chef files"
 mkdir -p /etc/chef || croak
