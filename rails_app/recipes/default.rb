@@ -36,26 +36,9 @@ bash "copy_authorized_keys" do
   not_if { File.exist?("#{node[:rails_app][:home]}/.ssh/authorized_keys") }
 end
 
-htpasswd_file = nil
-
-if node[:rails_app][:htpasswd]
-  htpasswd_file = "/etc/apache2/htpasswd-#{node[:rails_app][:name]}"
-
-  unless Array === node[:rails_app][:htpasswd]
-    node[:rails_app][:htpasswd] = [node[:rails_app][:htpasswd]]
-  end
-
-  htpasswd_file_created = false
-  node[:rails_app][:htpasswd].each do |user|
-    flags = '-b'
-    flags << ' -c' unless htpasswd_file_created
-
-    bash "add #{user[:username]} to #{htpasswd_file}" do
-      code %{ htpasswd #{flags} "#{htpasswd_file}" "#{user[:username]}" "#{user[:password]}" }
-    end
-
-    htpasswd_file_created = true
-  end
+apache_htpasswd do
+  path "/etc/apache2/htpasswd-#{node[:rails_app][:name]}"
+  set_users node[:rails_app][:htpasswd]
 end
 
 template "/etc/apache2/sites-available/#{node[:rails_app][:name]}" do
