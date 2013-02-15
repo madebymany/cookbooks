@@ -6,8 +6,8 @@ define :apache_htpasswd, :add_users => [], :remove_users => [], \
   path = params[:path] || File.join(node[:apache][:dir], 'htpasswd')
   normalise_params = lambda { |p|
     (Array === p ? p : [p]).map do |q|
-      Hash[q.current_normal.map { |k, v| [k.to_sym, v] }]
-    end
+      q ? Hash[q.current_normal.map { |k, v| [k.to_sym, v] }] : nil
+    end.compact
   }
 
   set_users = normalise_params[params[:set_users]]
