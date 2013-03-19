@@ -19,7 +19,7 @@ dbfilename dump.rdb
 dir <%= @node[:redis][:data_dir] %>
 
 <% if @node[:redis][:slave] %>
-  slaveof <%= @node[:redis][:slave][:master_ip] %> <%= @node[:redis][:slave][:port] || @node[:redis][:port] %>
+  slaveof <%= @node[:redis][:slave][:master_ip] || @node[:server_hostnames][:redis_master] %> <%= @node[:redis][:slave][:port] || @node[:redis][:port] %>
   <% if @node[:redis][:slave][:password] %>
     masterauth <%= @node[:redis][:slave][:password] %>
   <% end %>
