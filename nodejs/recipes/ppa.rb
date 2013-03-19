@@ -11,9 +11,7 @@ bash "add node.js repository" do
   not_if "grep -R node.js /etc/apt/sources.list /etc/apt/sources.list.d >/dev/null"
 end
 
-%w{nodejs npm}.each do |p|
-  package p do
-    action :upgrade
-  end
+package 'nodejs' do
+  action :upgrade
 end
 
