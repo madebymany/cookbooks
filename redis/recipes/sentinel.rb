@@ -1,5 +1,15 @@
 include_recipe "redis::source_install_requirements"
 
+if node[:server_hostnames] && node[:server_hostnames][:redis_master]
+  node[:redis_sentinel][:masters].each do |name, conf|
+    if conf['monitor'].nil?
+      conf['monitor'] = \
+        [node[:server_hostnames][:redis_master], 6379, 2]
+      node.set[:redis_sentinel][:masters][name] = conf
+    end
+  end
+end
+
 bash "install redis-sentinel" do
   cwd "/tmp"
   code <<-END
