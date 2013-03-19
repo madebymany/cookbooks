@@ -6,7 +6,7 @@ define :apache_htpasswd, :add_users => [], :remove_users => [], \
   path = params[:path] || File.join(node[:apache][:dir], 'htpasswd')
   normalise_params = lambda { |p|
     (Array === p ? p : [p]).map do |q|
-      q ? Hash[q.current_normal.map { |k, v| [k.to_sym, v] }] : nil
+      q ? Hash[q.map { |k, v| [k.to_sym, v] }] : nil
     end.compact
   }
 
@@ -36,13 +36,13 @@ define :apache_htpasswd, :add_users => [], :remove_users => [], \
                       if [ -r "#{path}" ]; then
                         truncate=""
                       else
-                        trucate=-c
+                        truncate=-c
                       fi
                       END
                     end
 
     bash "#{verb} #{u[:username]} #{preposition} #{path}" do
-      code %{ #{truncate_test}; htpasswd #{flags} $truncate "#{path}" "#{u[:username]}" "#{u[:password]}" }
+      code %{ #{truncate_test}\nhtpasswd #{flags} $truncate "#{path}" "#{u[:username]}" "#{u[:password]}" }
     end
 
     truncate = false
