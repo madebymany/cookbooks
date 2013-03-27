@@ -1,16 +1,17 @@
 <% if node.redis.port -%>
-  port <%= @node[:redis][:port] %>
+port <%= @node[:redis][:port] %>
 <% end -%>
 <% if node.redis.bind_address -%>
-  bind <%= @node[:redis][:bind_address] %>
+bind <%= @node[:redis][:bind_address] %>
 <% end -%>
+
 timeout <%= @node[:redis][:timeout] %> 
 databases <%= @node[:redis][:databases] %>
 logfile <%= @node[:redis][:log_dir] %>/redis-server.log
 pidfile <%= @node[:redis][:pid_file] %>
 
 <% @node[:redis][:snapshots].each do |interval, keys| %>
-  save <%= interval %> <%= keys %>
+save <%= interval %> <%= keys %>
 <% end %>
 
 rdbcompression yes
@@ -19,18 +20,18 @@ dbfilename dump.rdb
 dir <%= @node[:redis][:data_dir] %>
 
 <% if @node[:redis][:slave] %>
-  slaveof <%= @node[:redis][:slave][:master_ip] || @node[:server_hostnames][:redis_master] %> <%= @node[:redis][:slave][:port] || @node[:redis][:port] %>
+slaveof <%= @node[:redis][:slave][:master_ip] %> <%= @node[:redis][:slave][:port] || @node[:redis][:port] %>
   <% if @node[:redis][:slave][:password] %>
-    masterauth <%= @node[:redis][:slave][:password] %>
+masterauth <%= @node[:redis][:slave][:password] %>
   <% end %>
 <% end %>
 
 <% if @node[:redis][:password] %>
-  requirepass <%= @node[:redis][:password] %>
+requirepass <%= @node[:redis][:password] %>
 <% end %>
 
 <% if @node[:redis][:max_clients] %>
-  maxclients <%= @node[:redis][:max_clients] %>
+maxclients <%= @node[:redis][:max_clients] %>
 <% end %>
 
 <% if @node[:redis][:limit_memory] %>
