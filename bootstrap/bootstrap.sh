@@ -32,6 +32,9 @@ happy_ending "Chef is already bootstrapped. Nothing more to do."
 inform "Updating package index"
 apt-get update || croak
 
+inform "installing en language pack"
+apt-get install language-pack-en || croak
+
 inform "Setting up build environment"
 apt-get install -y build-essential openssl libreadline6 libreadline6-dev curl git-core \
   zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-0 libsqlite3-dev sqlite3 libxml2-dev \
