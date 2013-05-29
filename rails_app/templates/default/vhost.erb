@@ -1,5 +1,11 @@
 <VirtualHost *:80>
 
+  <IfModule mod_headers.c>
+    Header always unset "X-Powered-By"
+    Header always unset "X-Runtime"
+    Header always unset "X-Rack-Cache"
+  </IfModule>
+
   ServerName <%= node[:rails_app][:canonical_domain] %>
   <% (node[:rails_app][:domain_aliases] || []).each do |a| %>
   ServerAlias <%= a %>
