@@ -14,7 +14,7 @@
   CustomLog <%= node[:apache][:log_dir] %>/access.log combined
   DocumentRoot <%= node[:rails_app][:home] %>/current/public
 
-  RailsEnv production
+  RailsEnv <%= node[:rails_app][:env] %>
 
 <% if node[:rails_app][:headers] %>
   <% node[:rails_app][:headers].each do |header| %>
