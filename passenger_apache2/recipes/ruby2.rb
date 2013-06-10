@@ -18,6 +18,8 @@ bash "compile and install ruby 2" do
 
   rm -rf /tmp/install-ruby
   END
+
+  not_if "ruby -v | grep -q 2.0.0"
 end
 #overide default chef ruby version to use new path
 #node.override[:languages][:ruby][:ruby_bin] = "/usr/local/bin/ruby"
