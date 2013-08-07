@@ -43,6 +43,7 @@ end
 user server_user do
   home server_data
   gid server_group
+  #system true
   shell "/bin/bash"
 end
 
@@ -67,22 +68,7 @@ bash "install debian package" do
   wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-0.90.3.deb
   dpkg -i elasticsearch-0.90.3.deb
   EOH
-  not_if { ::File.exists?("/usr/share/elasticsearch") } 
-end
-
-
-template "#{server_etc}/elasticsearch.yml" do
-  source "elasticsearch.yml.erb"
-  owner "root"
-  group "root"
-  mode 0644
-end
-
-template "#{server_etc}/elasticsearch.conf" do
-  source "elasticsearch.conf.erb"
-  owner "root"
-  group "root"
-  mode 0644
+  action :nothing
 end
 
 ruby_block "install elasticsearch plugins" do
@@ -105,7 +91,8 @@ ruby_block "install elasticsearch plugins" do
       installed_name = name[/[^\/]+\z/].sub(/\Aelasticsearch-/, '')
       unless plugins_installed.include?(installed_name)
         Chef::Log.info("install elasticsearch plugin #{name}")
-        cmd = "/usr/share/elasticsearch/bin/plugin --install #{name}"
+        cmd = %Q[#{server_path}/bin/plugin -install #{name}]
+        cmd << %Q[ -url "#{url}"] if url
         Chef::ShellOut.new(cmd).run_command
       end
     end
