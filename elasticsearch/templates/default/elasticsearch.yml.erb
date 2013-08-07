@@ -111,10 +111,7 @@ gateway:
 discovery:
   type: ec2
   ec2:
-    tag:
-    <%- node.elasticsearch.ec2_tag_filters.each do |name, value| %>
-      <%= name %>: <%= value %>
-    <%- end %>
+    groups: <%= node.elasticsearch.ec2_security_group_filters %>
   <% end %>
 <% end %>
 
