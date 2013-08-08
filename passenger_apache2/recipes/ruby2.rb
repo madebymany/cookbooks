@@ -1,26 +1,26 @@
-bash "compile and install ruby 2" do
-  code <<-END
-  set -e
-  apt-get install -y make
-  cd /tmp
-  mkdir install-ruby
-  cd install-ruby
-  wget ftp://ftp.ruby-lang.org/pub/ruby/2.0/ruby-2.0.0-p195.tar.gz
+include_recipe "apt-s3"
 
-  tar zxvf ruby-2.0.0-p195.tar.gz
-  cd ruby-2.0.0-p195
-  ./configure --prefix=/usr/local
-  make
-  make install
-  ruby -v
-  ruby -ropenssl -rzlib -rreadline -e "puts 'Hello Ruby World!'"
-  apt-get -y install libreadline-ruby libopenssl-ruby
-
-  rm -rf /tmp/install-ruby
-  END
+apt_package "installing libopenssl debian" do
+  name "libopenssl-ruby"
+  action :install
 end
-#overide default chef ruby version to use new path
-#node.override[:languages][:ruby][:ruby_bin] = "/usr/local/bin/ruby"
+
+apt_package "installing libreadline debian" do
+  name "libreadline-ruby"
+  action :install
+end
+
+apt_package "installing ruby2 debian" do
+  name "ruby-2-mxm"
+  action :install
+end
+
+bash "testing ruby install" do
+  code <<-EOH
+  ruby -ropenssl -rzlib -rreadline -e "puts 'Hello Ruby World!'"
+  EOH
+  action :run
+end
 
 include_recipe "passenger_apache2::default"
 include_recipe "passenger_apache2::config"
