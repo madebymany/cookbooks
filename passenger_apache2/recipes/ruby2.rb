@@ -1,19 +1,19 @@
 include_recipe "apts3"
 
-apt_package "installing libssl debian" do
-  name "libssl-dev"
-  action :install
-end
+#apt_package "installing libssl debian" do
+  #name "libssl-dev"
+  #action :install
+#end
 
-apt_package "installing openssl debian" do
-  name "openssl"
-  action :install
-end
+#apt_package "installing openssl debian" do
+  #name "openssl"
+  #action :install
+#end
 
-apt_package "installing libreadline debian" do
-  name "libreadline-dev"
-  action :install
-end
+#apt_package "installing libreadline debian" do
+  #name "libreadline-dev"
+  #action :install
+#end
 
 apt_package "installing ruby2 debian" do
   name "ruby-2-mxm"
