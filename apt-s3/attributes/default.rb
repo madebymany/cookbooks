@@ -1,0 +1,6 @@
+set[:apts3][:access_id] = "test"
+set[:apts3][:secret_key] = "test"
+set[:apts3][:components] = "test"
+set[:apts3][:bucket] = "test"
+set[:apts3][:architectures] = "test"
+set[:apts3][:distribution] = "test"
