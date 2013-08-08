@@ -36,14 +36,6 @@ plugins                     = node['elasticsearch']['plugins']
 
 include_recipe "java"
 
-bash "install debian package" do
-  code <<-EOH
-  wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-0.90.3.deb
-  dpkg -i elasticsearch-0.90.3.deb
-  EOH
-  not_if { ::File.exists?("/usr/share/elasticsearch") } 
-end
-
 group server_group do
   system true
 end
@@ -70,6 +62,17 @@ end
   end
 end
 
+bash "install debian package" do
+  code <<-EOH
+  wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-0.90.3.deb
+  dpkg -i elasticsearch-0.90.3.deb
+  EOH
+  not_if do
+    File.exists?("/usr/share/elasticsearch")
+  end
+end
+
+
 
 template "#{server_etc}/logging.yml" do
   source "logging.yml.erb"
@@ -94,22 +97,9 @@ end
 
 ruby_block "install elasticsearch plugins" do
   block do
-    plugins_installed = Dir.foreach(server_plugins)
-
-    if plugins.is_a?(String)
-      plugins = plugins.split(/[,;]\s*|\s+/)
-    end
-
-    plugins.each do |plugin|
-      name = plugin
-
-      installed_name = name.sub!("elasticsearch", "")
-      unless plugins_installed.include?(installed_name)
-        Chef::Log.info("install elasticsearch plugin #{name}")
-        cmd = "/usr/share/elasticsearch/bin/plugin --install #{name}"
-        Chef::ShellOut.new(cmd).run_command
-      end
-    end
+    Chef::Log.info("install elasticsearch plugin #{name}")
+    cmd = "/usr/share/elasticsearch/bin/plugin --install #{name}"
+    Chef::ShellOut.new(cmd).run_command
   end
 
   action :create
