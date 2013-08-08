@@ -68,7 +68,7 @@ bash "install debian package" do
   dpkg -i elasticsearch-0.90.3.deb
   EOH
   not_if do
-    File.exists?("/usr/share/elasticsearch")
+    File.exists?("/usr/share/elasticsearch/bin")
   end
 end
 
