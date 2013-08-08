@@ -240,20 +240,20 @@ bootstrap.mlockall: <%= node['elasticsearch']['mem_mlock'] %>
 network.bind_host: <%= node['elasticsearch']['bind_host'] %> 
 
 <% if node['elasticsearch']['publish_host'] %>
-  network.publish_host: <%= node['elasticsearch']['publish_host'] %>
+network.publish_host: <%= node['elasticsearch']['publish_host'] %>
 network.host: <%= node['elasticsearch']['publish_host'] %>
 <% end %>
 
 <% if node['elasticsearch']['port_tcp'] %>
-  transport.tcp.port: <%= node['elasticsearch']['port_tcp'] %>
+#transport.tcp.port: <%= node['elasticsearch']['port_tcp'] %>
 <% end %>
 
 <% if node['elasticsearch']['port_http'] %>
-  http.port: <%= node['elasticsearch']['port_http'] %>
+#http.port: <%= node['elasticsearch']['port_http'] %>
 <% end %>
 
 <% if node['elasticsearch']['http_disable']  %>
-  http.enabled: false
+#http.enabled: false
 <% end %>
 #################################### Gateway ###################################
 #

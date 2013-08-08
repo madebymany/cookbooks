@@ -11,19 +11,20 @@ if platform?("ubuntu")
   end
 end
 
+template "/etc/monit/monitrc" do
+  owner "root"
+  group "root"
+  mode 0700
+  source 'monitrc.erb'
+  #notifies :restart, resources(:service => "monit"), :immediate
+end
+
 service "monit" do
   action :start
   enabled true
   supports [:start, :restart, :stop]
 end
 
-template "/etc/monit/monitrc" do
-  owner "root"
-  group "root"
-  mode 0700
-  source 'monitrc.erb'
-  notifies :restart, resources(:service => "monit"), :immediate
-end
 
 # We set the delay in the config now
 file "/etc/monit/monit_delay" do

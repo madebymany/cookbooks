@@ -22,6 +22,8 @@ Vagrant::Config.run do |config|
      chef.cookbooks_path = "./"
      chef.add_recipe "apt"
      chef.add_recipe "elasticsearch"
+     chef.add_recipe "elasticsearch::monit"
+     chef.add_recipe "postfix"
      #chef.add_recipe "apache2::mod_headers"
      #chef.add_recipe "apache2::mod_rewrite"
      #chef.add_recipe "passenger_apache2::ruby2"
