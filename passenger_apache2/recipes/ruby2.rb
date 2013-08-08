@@ -1,4 +1,4 @@
-include_recipe "apt-s3"
+include_recipe "apts3"
 
 apt_package "installing libssl debian" do
   name "libssl-dev"
