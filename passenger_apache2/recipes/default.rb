@@ -44,8 +44,9 @@ else
     version node[:passenger][:version]
   end
 
-  execute "passenger_module" do
-    command "passenger-install-apache2-module -a"
-    creates node[:passenger][:module_path]
+  bash "install passenger module" do
+    code <<-EOH
+    ./passenger-install-apache2-module -a
+    EOH
   end
 end
