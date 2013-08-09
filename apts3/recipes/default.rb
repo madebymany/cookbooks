@@ -26,9 +26,17 @@ bash "install apt-s3 method" do
   action :run
 
 end
+
 bash "add S3 repository" do
   code <<-EOH
   echo "deb [arch=#{architectures}] s3://#{access_id}:[#{secret_key}]@s3.amazonaws.com/#{bucket} #{distribution} #{components}" | sudo tee /etc/apt/sources.list.d/s3.amazonaws.com.#{bucket}.list
+  EOH
+  action :run
+end
+
+bash "update apt" do
+  code <<-EOH
+  apt-get update -qq
   EOH
   action :run
 end
