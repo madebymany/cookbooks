@@ -18,4 +18,7 @@
 # limitations under the License.
 #
 
-include_recipe "java::#{node['java']['install_flavor']}"
+#include_recipe "java::#{node['java']['install_flavor']}"
+apt_package "openjdk-6-jre" do
+  action :install
+end
