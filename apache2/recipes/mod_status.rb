@@ -18,6 +18,5 @@
 #
 
 apache_module "status" do
-  status = node[:apache].has_key?(:mod_status) ? node[:apache][:mod_status] : true
-  conf status
+  conf true
 end
