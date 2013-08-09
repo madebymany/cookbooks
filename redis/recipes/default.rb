@@ -1,14 +1,16 @@
 include_recipe "redis::source_install_requirements"
-include_recipe "install_from"
 
-install_from_release('redis') do
-    release_url  node[:redis][:release_url]
-    home_dir     node[:redis][:home_dir]
-    version      node[:redis][:version]
-    action       [ :install, :install_with_make ]
-    not_if do
-      File.exists?("#{node[:redis][:home_dir]}-#{node[:redis][:version]}")
-    end
+bash "install redis-sentinel" do
+  cwd "/tmp"
+  code <<-END
+    rm -rf redis-unstable >/dev/null 2>&1
+    set -e
+    git clone git://github.com/antirez/redis.git redis-unstable
+    cd redis-unstable
+    git checkout 58708fa65a30920b97a1df07d8549f5b61810ce0
+    make install
+  END
+  not_if "which redis-server"
 end
 
 include_recipe 'redis::config'
