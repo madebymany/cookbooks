@@ -46,7 +46,7 @@ else
 
   bash "install passenger module" do
     code <<-EOH
-    ./passenger-install-apache2-module -a
+passenger-install-apache2-module -a
     EOH
   end
 end
