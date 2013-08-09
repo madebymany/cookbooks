@@ -13,7 +13,3 @@ bash "testing ruby install" do
   EOH
   action :run
 end
-
-include_recipe "passenger_apache2::default"
-include_recipe "passenger_apache2::config"
-include_recipe "passenger_apache2::mod_rails"
