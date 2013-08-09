@@ -26,7 +26,12 @@ include_recipe "apache2"
 
   bash "install passenger module" do
     code <<-EOH
+    apt-get install -y apache2-mpm-prefork
+    apt-get install -y apache2-prefork-dev
+    apt-get install -y libapr1-dev
+    apt-get install -y libaprutil1-dev
+    apt-get install -y libcurl4-openssl-dev 
     gem install passenger -v #{node[:passenger][:version]}
-    passenger-install-apache2-module -a
+    $(gem environment | awk '/INSTALLATION DIRECTORY/{print $4}')/../../../../bin/passenger-install-apache2-module -a
     EOH
   end
