@@ -24,29 +24,9 @@
 
 include_recipe "apache2"
 
-if node[:passenger][:from_system]
-  package "libapache2-mod-passenger"
-else
-  include_recipe "build-essential"
-
-  if platform?("centos","redhat")
-    package "httpd-devel"
-    package "curl-devel"
-  else
-    %w{ apache2-prefork-dev libapr1-dev libcurl4-openssl-dev }.each do |pkg|
-      package pkg do
-        action :upgrade
-      end
-    end
-  end
-
-  gem_package "passenger" do
-    version node[:passenger][:version]
-  end
-
   bash "install passenger module" do
     code <<-EOH
-passenger-install-apache2-module -a
+    gem install passenger -v #{node[:passenger][:version]}
+    passenger-install-apache2-module -a
     EOH
   end
-end

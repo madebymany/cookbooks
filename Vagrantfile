@@ -23,7 +23,9 @@ Vagrant::Config.run do |config|
      config.vm.provision :chef_solo do |chef|
      chef.cookbooks_path = "./"
      chef.add_recipe "apt"
-     chef.add_recipe "redis"
+     chef.add_recipe "apts3"
+     chef.add_recipe "ruby2"
+     chef.add_recipe "passenger_apache2::mod_rails"
      #chef.add_recipe "passenger_apache2::ruby2"
      #chef.add_recipe "apache2::mod_headers"
      #chef.add_recipe "apache2::mod_rewrite"
