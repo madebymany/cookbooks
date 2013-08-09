@@ -15,11 +15,11 @@ package 'redis-server' do
   action :upgrade
 end
 
-node[:redis][:conf_dir] = "/etc/redis"
-node[:redis][:log_dir]  = "/var/log/redis"
-node[:redis][:data_dir] = "/var/lib/redis"
-node[:redis][:home_dir] = "/var/log/redis"
-node[:redis][:pid_file] = "/var/run/redis/redis.pid"
+node.default[:redis][:conf_dir] = "/etc/redis"
+node.default[:redis][:log_dir]  = "/var/log/redis"
+node.default[:redis][:data_dir] = "/var/lib/redis"
+node.default[:redis][:home_dir] = "/var/log/redis"
+node.default[:redis][:pid_file] = "/var/run/redis/redis.pid"
 
 include_recipe 'redis::config'
 include_recipe 'redis::server_monit'
