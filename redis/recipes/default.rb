@@ -1,6 +1,7 @@
 include_recipe "redis::source_install_requirements"
+include_recipe "git"
 
-bash "install redis-sentinel" do
+bash "install redis" do
   cwd "/tmp"
   code <<-END
     rm -rf redis-unstable >/dev/null 2>&1

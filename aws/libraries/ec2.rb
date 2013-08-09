@@ -1,10 +1,10 @@
 # TODO: once sync_libraries properly handles sub-directories, move this file to aws/libraries/opscode/aws/ec2.rb
 
-begin
-  require 'right_aws'
-rescue LoadError
-  Chef::Log.warn("Missing gem 'right_aws'")
-end
+#begin
+  #require 'right_aws'
+#rescue LoadError
+  #Chef::Log.warn("Missing gem 'right_aws'")
+#end
 
 require 'open-uri'
 
