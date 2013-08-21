@@ -26,6 +26,10 @@ masterauth <%= @node[:redis][:slave][:password] %>
   <% end %>
 <% end %>
 
+<% if @node[:redis][:slavereadonly] %>
+slave-read-only <%= @node[:redis][:slavereadonly] %>
+<% end %>
+
 <% if @node[:redis][:password] %>
 requirepass <%= @node[:redis][:password] %>
 <% end %>
