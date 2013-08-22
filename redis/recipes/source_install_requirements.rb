@@ -7,6 +7,7 @@ user node[:redis][:user] do
     uid       335
     gid       node[:redis][:group]
     shell     "/bin/false"
+    not_if {"grep redis /etc/passwd"}
 end
 
 directory node[:redis][:log_dir] do
