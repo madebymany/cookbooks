@@ -46,10 +46,10 @@ if node[:rails_app][:htpasswd]
   end
 end
 
-template "/etc/apache2/sites-available/#{node[:rails_app][:name]}" do
-  source "vhost.erb"
-  variables htpasswd_file: htpasswd_file
-end
+#template "/etc/apache2/sites-available/#{node[:rails_app][:name]}" do
+  #source "vhost.erb"
+  #variables htpasswd_file: htpasswd_file
+#end
 
 %w[
   releases
