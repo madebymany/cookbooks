@@ -15,4 +15,3 @@ bash "install redis" do
 end
 
 include_recipe 'redis::config'
-include_recipe 'redis::server_monit'
