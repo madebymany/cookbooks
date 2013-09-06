@@ -117,14 +117,14 @@ bash "placate_apache" do
   not_if { File.exist?("#{ node[:rails_app][:home] }/current") }
 end
 
-bash "enable_site" do
-  code "a2ensite #{node[:rails_app][:name]}"
-end
+#bash "enable_site" do
+  #code "a2ensite #{node[:rails_app][:name]}"
+#end
 
-bash "reload_apache" do
-  code "/etc/init.d/apache2 start"
-  code "/etc/init.d/apache2 reload"
-end
+#bash "reload_apache" do
+  #code "/etc/init.d/apache2 start"
+  #code "/etc/init.d/apache2 reload"
+#end
 
 template "/etc/logrotate.d/rails_app" do
   source "logrotate.erb"
