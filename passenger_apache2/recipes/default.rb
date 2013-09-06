@@ -34,4 +34,5 @@ include_recipe "apache2"
     gem install passenger -v #{node[:passenger][:version]}
     $(gem environment | awk '/INSTALLATION DIRECTORY/{print $4}')/../../../../bin/passenger-install-apache2-module -a
     EOH
+    not_if {"gem list | grep passeneger"}
   end
